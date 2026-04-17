@@ -9,8 +9,44 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as QrCodesRouteImport } from './routes/qr-codes'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MenuRouteImport } from './routes/menu'
+import { Route as LoyaltyRouteImport } from './routes/loyalty'
+import { Route as CustomersRouteImport } from './routes/customers'
+import { Route as BillingRouteImport } from './routes/billing'
 import { Route as IndexRouteImport } from './routes/index'
 
+const QrCodesRoute = QrCodesRouteImport.update({
+  id: '/qr-codes',
+  path: '/qr-codes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MenuRoute = MenuRouteImport.update({
+  id: '/menu',
+  path: '/menu',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoyaltyRoute = LoyaltyRouteImport.update({
+  id: '/loyalty',
+  path: '/loyalty',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CustomersRoute = CustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BillingRoute = BillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +55,116 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/billing': typeof BillingRoute
+  '/customers': typeof CustomersRoute
+  '/loyalty': typeof LoyaltyRoute
+  '/menu': typeof MenuRoute
+  '/notifications': typeof NotificationsRoute
+  '/qr-codes': typeof QrCodesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/billing': typeof BillingRoute
+  '/customers': typeof CustomersRoute
+  '/loyalty': typeof LoyaltyRoute
+  '/menu': typeof MenuRoute
+  '/notifications': typeof NotificationsRoute
+  '/qr-codes': typeof QrCodesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/billing': typeof BillingRoute
+  '/customers': typeof CustomersRoute
+  '/loyalty': typeof LoyaltyRoute
+  '/menu': typeof MenuRoute
+  '/notifications': typeof NotificationsRoute
+  '/qr-codes': typeof QrCodesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/billing'
+    | '/customers'
+    | '/loyalty'
+    | '/menu'
+    | '/notifications'
+    | '/qr-codes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/billing'
+    | '/customers'
+    | '/loyalty'
+    | '/menu'
+    | '/notifications'
+    | '/qr-codes'
+  id:
+    | '__root__'
+    | '/'
+    | '/billing'
+    | '/customers'
+    | '/loyalty'
+    | '/menu'
+    | '/notifications'
+    | '/qr-codes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BillingRoute: typeof BillingRoute
+  CustomersRoute: typeof CustomersRoute
+  LoyaltyRoute: typeof LoyaltyRoute
+  MenuRoute: typeof MenuRoute
+  NotificationsRoute: typeof NotificationsRoute
+  QrCodesRoute: typeof QrCodesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/qr-codes': {
+      id: '/qr-codes'
+      path: '/qr-codes'
+      fullPath: '/qr-codes'
+      preLoaderRoute: typeof QrCodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/menu': {
+      id: '/menu'
+      path: '/menu'
+      fullPath: '/menu'
+      preLoaderRoute: typeof MenuRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/loyalty': {
+      id: '/loyalty'
+      path: '/loyalty'
+      fullPath: '/loyalty'
+      preLoaderRoute: typeof LoyaltyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/customers': {
+      id: '/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof CustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/billing': {
+      id: '/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof BillingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +177,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BillingRoute: BillingRoute,
+  CustomersRoute: CustomersRoute,
+  LoyaltyRoute: LoyaltyRoute,
+  MenuRoute: MenuRoute,
+  NotificationsRoute: NotificationsRoute,
+  QrCodesRoute: QrCodesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
