@@ -57,8 +57,18 @@ export const customers: Customer[] = [
 ];
 
 export const activity: Activity[] = [
-  { id: "a1", customer: "Amara Okafor", action: "Scanned loyalty QR · +1 stamp", time: "2 min ago" },
-  { id: "a2", customer: "Liam Thompson", action: "Redeemed reward: Free drink", time: "18 min ago" },
+  {
+    id: "a1",
+    customer: "Amara Okafor",
+    action: "Scanned loyalty QR · +1 stamp",
+    time: "2 min ago",
+  },
+  {
+    id: "a2",
+    customer: "Liam Thompson",
+    action: "Redeemed reward: Free drink",
+    time: "18 min ago",
+  },
   { id: "a3", customer: "Anonymous", action: "Viewed digital menu", time: "32 min ago" },
   { id: "a4", customer: "Sofia Martinez", action: "Reached tier: Free meal 🎉", time: "1h ago" },
   { id: "a5", customer: "Yuki Tanaka", action: "Scanned loyalty QR · +1 stamp", time: "2h ago" },
@@ -66,10 +76,46 @@ export const activity: Activity[] = [
 ];
 
 export const menuItems: MenuItem[] = [
-  { id: "m1", name: "Truffle Mushroom Risotto", price: 18.5, category: "Mains", description: "Creamy arborio rice with wild mushrooms and shaved truffle." },
-  { id: "m2", name: "Wood-fired Margherita", price: 14.0, category: "Mains", description: "San Marzano tomato, fior di latte, fresh basil." },
-  { id: "m3", name: "Burrata & Heirloom Tomato", price: 12.0, category: "Starters", description: "Creamy burrata with garden tomatoes and basil oil." },
-  { id: "m4", name: "Charred Octopus", price: 16.5, category: "Starters", description: "Smoky octopus with romesco and crispy potatoes." },
-  { id: "m5", name: "Tiramisu Classico", price: 9.0, category: "Desserts", description: "Espresso-soaked ladyfingers, mascarpone cream, cocoa." },
-  { id: "m6", name: "Spiced Hot Chocolate", price: 5.5, category: "Drinks", description: "Dark chocolate with cinnamon and a hint of chili." },
+  {
+    id: "m1",
+    name: "Truffle Mushroom Risotto",
+    price: 18.5,
+    category: "Mains",
+    description: "Creamy arborio rice with wild mushrooms and shaved truffle.",
+  },
+  {
+    id: "m2",
+    name: "Wood-fired Margherita",
+    price: 14.0,
+    category: "Mains",
+    description: "San Marzano tomato, fior di latte, fresh basil.",
+  },
+  {
+    id: "m3",
+    name: "Burrata & Heirloom Tomato",
+    price: 12.0,
+    category: "Starters",
+    description: "Creamy burrata with garden tomatoes and basil oil.",
+  },
+  {
+    id: "m4",
+    name: "Charred Octopus",
+    price: 16.5,
+    category: "Starters",
+    description: "Smoky octopus with romesco and crispy potatoes.",
+  },
+  {
+    id: "m5",
+    name: "Tiramisu Classico",
+    price: 9.0,
+    category: "Desserts",
+    description: "Espresso-soaked ladyfingers, mascarpone cream, cocoa.",
+  },
+  {
+    id: "m6",
+    name: "Spiced Hot Chocolate",
+    price: 5.5,
+    category: "Drinks",
+    description: "Dark chocolate with cinnamon and a hint of chili.",
+  },
 ];

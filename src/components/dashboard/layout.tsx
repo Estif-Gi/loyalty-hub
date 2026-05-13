@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 import { DashboardSidebar } from "./sidebar";
 import { MobileTopbar } from "./mobile-topbar";
+import { useAuth } from "@/lib/auth";
+import { useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export function DashboardLayout({
   title,
@@ -13,6 +16,17 @@ export function DashboardLayout({
   actions?: ReactNode;
   children: ReactNode;
 }) {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate({ to: "/login" });
+    }
+  }, [isAuthenticated, navigate]);
+
+  if (!isAuthenticated) return null;
+
   return (
     <div className="min-h-screen flex bg-background">
       <DashboardSidebar />

@@ -9,8 +9,22 @@ export const Route = createFileRoute("/billing")({
 
 const plans = [
   { name: "Café", price: 19, features: ["Up to 200 customers", "Loyalty QR", "Basic analytics"] },
-  { name: "Bistro Pro", price: 49, features: ["Unlimited customers", "Loyalty + Menu QR", "Push notifications", "Advanced analytics"], current: true },
-  { name: "Restaurant Group", price: 119, features: ["Multiple locations", "Custom branding", "Dedicated support", "API access"] },
+  {
+    name: "Bistro Pro",
+    price: 49,
+    features: [
+      "Unlimited customers",
+      "Loyalty + Menu QR",
+      "Push notifications",
+      "Advanced analytics",
+    ],
+    current: true,
+  },
+  {
+    name: "Restaurant Group",
+    price: 119,
+    features: ["Multiple locations", "Custom branding", "Dedicated support", "API access"],
+  },
 ];
 
 function BillingPage() {
@@ -52,14 +66,23 @@ function BillingPage() {
           <div
             key={p.name}
             className={`rounded-2xl border p-6 shadow-soft transition-all ${
-              p.current ? "border-primary bg-cream" : "bg-card border-border hover:shadow-warm hover:-translate-y-0.5"
+              p.current
+                ? "border-primary bg-cream"
+                : "bg-card border-border hover:shadow-warm hover:-translate-y-0.5"
             }`}
           >
             <div className="flex items-start justify-between">
               <h3 className="font-display text-xl">{p.name}</h3>
-              {p.current && <span className="text-xs px-2 py-0.5 rounded-full bg-primary text-primary-foreground">Current</span>}
+              {p.current && (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
+                  Current
+                </span>
+              )}
             </div>
-            <p className="font-display text-3xl mt-3">${p.price}<span className="text-sm text-muted-foreground font-sans">/mo</span></p>
+            <p className="font-display text-3xl mt-3">
+              ${p.price}
+              <span className="text-sm text-muted-foreground font-sans">/mo</span>
+            </p>
             <ul className="mt-4 space-y-2">
               {p.features.map((f) => (
                 <li key={f} className="flex items-start gap-2 text-sm">

@@ -1,27 +1,82 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Plus, Pencil, Trash2, Eye, X } from "lucide-react";
+import { Plus, Eye, X, Loader2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/layout";
-import { menuItems as initial, type MenuItem } from "@/lib/dashboard-data";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+import { toast } from "sonner";
+
+export type MenuItem = {
+  _id?: string;
+  name: string;
+  price: number;
+  category: string;
+  description: string;
+  image?: string;
+};
 
 export const Route = createFileRoute("/menu")({
   head: () => ({ meta: [{ title: "Menu · Ember & Oak" }] }),
   component: MenuPage,
 });
 
-const empty: Omit<MenuItem, "id"> = { name: "", price: 0, category: "Mains", description: "" };
+const empty: Omit<MenuItem, "_id"> = { name: "", price: 0, category: "Mains", description: "" };
 
 function MenuPage() {
-  const [items, setItems] = useState<MenuItem[]>(initial);
-  const [editing, setEditing] = useState<MenuItem | null>(null);
+  const [adding, setAdding] = useState<boolean>(false);
   const [preview, setPreview] = useState(false);
+  const { restaurantId } = useAuth();
+  const queryClient = useQueryClient();
 
-  const save = (item: MenuItem) => {
-    setItems((items.find((i) => i.id === item.id) ? items.map((i) => (i.id === item.id ? item : i)) : [...items, item]));
-    setEditing(null);
+  const { data: menus, isLoading } = useQuery({
+    queryKey: ["menus", restaurantId],
+    queryFn: async () => {
+      const res = await api.get(`/menus/restaurant/${restaurantId}`);
+      return res.data;
+    },
+    enabled: !!restaurantId,
+  });
+
+  const menuObj = menus && menus.length > 0 ? menus[0] : null;
+  const items: MenuItem[] = menuObj ? menuObj.items : [];
+
+  const createMenuMutation = useMutation({
+    mutationFn: async (item: any) => {
+      await api.post("/menus", {
+        restaurantId,
+        items: [item],
+      });
+    },
+    onSuccess: () => {
+      toast.success("Item added!");
+      queryClient.invalidateQueries({ queryKey: ["menus"] });
+      setAdding(false);
+    },
+    onError: () => toast.error("Failed to add item"),
+  });
+
+  const addItemMutation = useMutation({
+    mutationFn: async (item: any) => {
+      await api.patch(`/menus/${menuObj._id}/items`, { items: [item] });
+    },
+    onSuccess: () => {
+      toast.success("Item added!");
+      queryClient.invalidateQueries({ queryKey: ["menus"] });
+      setAdding(false);
+    },
+    onError: () => toast.error("Failed to add item"),
+  });
+
+  const save = (item: any) => {
+    if (!menuObj) {
+      createMenuMutation.mutate(item);
+    } else {
+      addItemMutation.mutate(item);
+    }
   };
 
-  const categories = Array.from(new Set(items.map((i) => i.category)));
+  const categories = Array.from(new Set(items.map((i) => i.category || "Mains")));
 
   return (
     <DashboardLayout
@@ -36,7 +91,7 @@ function MenuPage() {
             <Eye className="h-4 w-4" /> Preview
           </button>
           <button
-            onClick={() => setEditing({ ...empty, id: crypto.randomUUID() })}
+            onClick={() => setAdding(true)}
             className="inline-flex items-center gap-2 rounded-xl bg-primary text-primary-foreground px-4 py-2.5 text-sm font-medium hover:bg-primary-glow"
           >
             <Plus className="h-4 w-4" /> Add item
@@ -44,32 +99,49 @@ function MenuPage() {
         </>
       }
     >
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {items.map((item) => (
-          <div key={item.id} className="rounded-2xl bg-card border border-border p-5 shadow-soft hover:shadow-warm transition-all">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">{item.category}</span>
-                <h3 className="font-display text-lg mt-2 truncate">{item.name}</h3>
-                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
+      {isLoading ? (
+        <div className="py-20 flex justify-center text-muted-foreground">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {items.map((item, idx) => (
+            <div
+              key={item._id || idx}
+              className="rounded-2xl bg-card border border-border p-5 shadow-soft hover:shadow-warm transition-all"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">
+                    {item.category || "Mains"}
+                  </span>
+                  <h3 className="font-display text-lg mt-2 truncate">{item.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                    {item.description}
+                  </p>
+                </div>
+                <span className="font-display text-xl text-primary shrink-0">
+                  ${(item.price || 0).toFixed(2)}
+                </span>
               </div>
-              <span className="font-display text-xl text-primary shrink-0">${item.price.toFixed(2)}</span>
             </div>
-            <div className="flex gap-2 mt-4">
-              <button onClick={() => setEditing(item)} className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs hover:bg-secondary">
-                <Pencil className="h-3 w-3" /> Edit
-              </button>
-              <button onClick={() => setItems(items.filter((i) => i.id !== item.id))} className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-border text-destructive px-3 py-1.5 text-xs hover:bg-destructive/10">
-                <Trash2 className="h-3 w-3" /> Delete
-              </button>
+          ))}
+          {items.length === 0 && (
+            <div className="col-span-full py-10 text-center text-muted-foreground border border-dashed border-border rounded-2xl">
+              Your menu is empty. Add some items!
             </div>
-          </div>
-        ))}
-      </div>
+          )}
+        </div>
+      )}
 
-      {editing && (
-        <Modal onClose={() => setEditing(null)} title={items.find((i) => i.id === editing.id) ? "Edit item" : "New item"}>
-          <ItemForm initial={editing} onSave={save} onCancel={() => setEditing(null)} />
+      {adding && (
+        <Modal onClose={() => setAdding(false)} title="New item">
+          <ItemForm
+            initial={empty}
+            onSave={save}
+            onCancel={() => setAdding(false)}
+            isLoading={createMenuMutation.isPending || addItemMutation.isPending}
+          />
         </Modal>
       )}
 
@@ -80,17 +152,28 @@ function MenuPage() {
             <p className="text-center text-xs text-muted-foreground mb-4">Digital Menu</p>
             {categories.map((cat) => (
               <div key={cat} className="mb-5">
-                <h4 className="font-display text-sm uppercase tracking-widest text-primary mb-2">{cat}</h4>
+                <h4 className="font-display text-sm uppercase tracking-widest text-primary mb-2">
+                  {cat}
+                </h4>
                 <ul className="space-y-2">
-                  {items.filter((i) => i.category === cat).map((i) => (
-                    <li key={i.id} className="flex justify-between gap-3 pb-2 border-b border-dashed border-border">
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">{i.name}</p>
-                        <p className="text-xs text-muted-foreground line-clamp-1">{i.description}</p>
-                      </div>
-                      <span className="text-sm font-display text-primary shrink-0">${i.price.toFixed(2)}</span>
-                    </li>
-                  ))}
+                  {items
+                    .filter((i) => (i.category || "Mains") === cat)
+                    .map((i, idx) => (
+                      <li
+                        key={i._id || idx}
+                        className="flex justify-between gap-3 pb-2 border-b border-dashed border-border"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium truncate">{i.name}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-1">
+                            {i.description}
+                          </p>
+                        </div>
+                        <span className="text-sm font-display text-primary shrink-0">
+                          ${(i.price || 0).toFixed(2)}
+                        </span>
+                      </li>
+                    ))}
                 </ul>
               </div>
             ))}
@@ -101,13 +184,29 @@ function MenuPage() {
   );
 }
 
-function Modal({ children, onClose, title }: { children: React.ReactNode; onClose: () => void; title: string }) {
+function Modal({
+  children,
+  onClose,
+  title,
+}: {
+  children: React.ReactNode;
+  onClose: () => void;
+  title: string;
+}) {
   return (
-    <div className="fixed inset-0 z-50 bg-foreground/40 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg max-h-[90vh] overflow-auto rounded-2xl bg-card border border-border shadow-warm">
+    <div
+      className="fixed inset-0 z-50 bg-foreground/40 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in"
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-lg max-h-[90vh] overflow-auto rounded-2xl bg-card border border-border shadow-warm"
+      >
         <div className="flex items-center justify-between p-5 border-b border-border sticky top-0 bg-card">
           <h3 className="font-display text-xl">{title}</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-secondary"><X className="h-4 w-4" /></button>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-secondary">
+            <X className="h-4 w-4" />
+          </button>
         </div>
         <div className="p-5">{children}</div>
       </div>
@@ -115,29 +214,77 @@ function Modal({ children, onClose, title }: { children: React.ReactNode; onClos
   );
 }
 
-function ItemForm({ initial, onSave, onCancel }: { initial: MenuItem; onSave: (i: MenuItem) => void; onCancel: () => void }) {
+function ItemForm({
+  initial,
+  onSave,
+  onCancel,
+  isLoading,
+}: {
+  initial: any;
+  onSave: (i: any) => void;
+  onCancel: () => void;
+  isLoading: boolean;
+}) {
   const [item, setItem] = useState(initial);
   return (
     <div className="space-y-4">
       <Field label="Name">
-        <input value={item.name} onChange={(e) => setItem({ ...item, name: e.target.value })} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+        <input
+          value={item.name}
+          onChange={(e) => setItem({ ...item, name: e.target.value })}
+          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+          disabled={isLoading}
+        />
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label="Price ($)">
-          <input type="number" step="0.01" value={item.price} onChange={(e) => setItem({ ...item, price: parseFloat(e.target.value) || 0 })} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm" />
+          <input
+            type="number"
+            step="0.01"
+            value={item.price}
+            onChange={(e) => setItem({ ...item, price: parseFloat(e.target.value) || 0 })}
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+            disabled={isLoading}
+          />
         </Field>
         <Field label="Category">
-          <select value={item.category} onChange={(e) => setItem({ ...item, category: e.target.value })} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
-            <option>Starters</option><option>Mains</option><option>Desserts</option><option>Drinks</option>
+          <select
+            value={item.category}
+            onChange={(e) => setItem({ ...item, category: e.target.value })}
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+            disabled={isLoading}
+          >
+            <option>Starters</option>
+            <option>Mains</option>
+            <option>Desserts</option>
+            <option>Drinks</option>
           </select>
         </Field>
       </div>
       <Field label="Description">
-        <textarea value={item.description} onChange={(e) => setItem({ ...item, description: e.target.value })} rows={3} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm resize-none" />
+        <textarea
+          value={item.description}
+          onChange={(e) => setItem({ ...item, description: e.target.value })}
+          rows={3}
+          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm resize-none"
+          disabled={isLoading}
+        />
       </Field>
       <div className="flex justify-end gap-2 pt-2">
-        <button onClick={onCancel} className="px-4 py-2 rounded-lg border border-border text-sm hover:bg-secondary">Cancel</button>
-        <button onClick={() => onSave(item)} disabled={!item.name} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm hover:bg-primary-glow disabled:opacity-50">Save</button>
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 rounded-lg border border-border text-sm hover:bg-secondary"
+          disabled={isLoading}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={() => onSave(item)}
+          disabled={!item.name || isLoading}
+          className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm hover:bg-primary-glow disabled:opacity-50 inline-flex items-center gap-2"
+        >
+          {isLoading && <Loader2 className="h-4 w-4 animate-spin" />} Save
+        </button>
       </div>
     </div>
   );

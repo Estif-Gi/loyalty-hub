@@ -2,13 +2,24 @@ import { createFileRoute } from "@tanstack/react-router";
 import { QRCodeSVG } from "qrcode.react";
 import { Download, Share2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/layout";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/qr-codes")({
   head: () => ({ meta: [{ title: "QR Codes · Ember & Oak" }] }),
   component: QRPage,
 });
 
-function QRBlock({ title, description, value, accent }: { title: string; description: string; value: string; accent: string }) {
+function QRBlock({
+  title,
+  description,
+  value,
+  accent,
+}: {
+  title: string;
+  description: string;
+  value: string;
+  accent: string;
+}) {
   const downloadSVG = () => {
     const svg = document.getElementById(`qr-${accent}`);
     if (!svg) return;
@@ -26,7 +37,14 @@ function QRBlock({ title, description, value, accent }: { title: string; descrip
     <div className="rounded-2xl bg-card border border-border p-6 shadow-soft">
       <div className="flex flex-col items-center text-center">
         <div className="p-5 rounded-2xl bg-gradient-cream border border-border">
-          <QRCodeSVG id={`qr-${accent}`} value={value} size={200} bgColor="transparent" fgColor="#3a2615" level="H" />
+          <QRCodeSVG
+            id={`qr-${accent}`}
+            value={value}
+            size={200}
+            bgColor="transparent"
+            fgColor="#3a2615"
+            level="H"
+          />
         </div>
         <h3 className="font-display text-xl mt-5">{title}</h3>
         <p className="text-sm text-muted-foreground mt-1 max-w-xs">{description}</p>
@@ -38,7 +56,7 @@ function QRBlock({ title, description, value, accent }: { title: string; descrip
             onClick={downloadSVG}
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2.5 text-sm font-medium hover:bg-primary-glow transition-colors"
           >
-            <Download className="h-4 w-4" /> Download
+            <Download className="h-4 w-4" /> Download 
           </button>
           <button className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-medium hover:bg-secondary transition-colors">
             <Share2 className="h-4 w-4" /> Share
@@ -50,20 +68,25 @@ function QRBlock({ title, description, value, accent }: { title: string; descrip
 }
 
 function QRPage() {
+  const { restaurantId } = useAuth();
+
   return (
-    <DashboardLayout title="QR Codes" subtitle="Print, share, and place these around your restaurant.">
+    <DashboardLayout
+      title="QR Codes"
+      subtitle="Print, share, and place these around your restaurant."
+    >
       <div className="grid md:grid-cols-2 gap-6">
         <QRBlock
           accent="loyalty"
           title="Loyalty QR"
           description="Customers scan this to earn stamps toward rewards."
-          value="https://emberandoak.app/loyalty/r/EO-7821"
+          value="https://loyalty-customer.vercel.app"
         />
         <QRBlock
           accent="menu"
           title="Menu QR"
           description="Opens the digital menu on the customer's phone."
-          value="https://emberandoak.app/menu/EO-7821"
+          value={`https://loyalty-customer.vercel.app/menu/${restaurantId}`}
         />
       </div>
     </DashboardLayout>

@@ -22,7 +22,7 @@ export function StampCard({
                 "aspect-square rounded-full border-2 border-dashed flex items-center justify-center text-sm font-display transition-all",
                 filled
                   ? "bg-gradient-warm border-transparent text-primary-foreground shadow-warm scale-105"
-                  : "border-border text-muted-foreground/40"
+                  : "border-border text-muted-foreground/40",
               )}
             >
               {filled ? "★" : i + 1}
@@ -31,7 +31,9 @@ export function StampCard({
         })}
       </div>
       <div className="mt-4 flex items-center justify-between text-xs">
-        <span className="text-muted-foreground">{current}/{total} stamps</span>
+        <span className="text-muted-foreground">
+          {current}/{total} stamps
+        </span>
         <span className="font-medium text-primary">{total - current} to next reward</span>
       </div>
       <div className="mt-2 h-1.5 rounded-full bg-secondary overflow-hidden">

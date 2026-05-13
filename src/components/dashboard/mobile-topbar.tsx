@@ -9,14 +9,16 @@ import {
   Bell as BellIcon,
   UtensilsCrossed,
   CreditCard,
+  BadgeCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const nav = [
-  { to: "/", label: "Overview", icon: LayoutDashboard },
+  { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { to: "/qr-codes", label: "QR Codes", icon: QrCode },
   { to: "/loyalty", label: "Loyalty", icon: Gift },
   { to: "/customers", label: "Customers", icon: Users },
+  { to: "/employees", label: "Employees", icon: BadgeCheck },
   { to: "/notifications", label: "Notifications", icon: BellIcon },
   { to: "/menu", label: "Menu", icon: UtensilsCrossed },
   { to: "/billing", label: "Billing", icon: CreditCard },
@@ -57,7 +59,7 @@ export function MobileTopbar() {
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm",
                   active
                     ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                    : "hover:bg-sidebar-accent"
+                    : "hover:bg-sidebar-accent",
                 )}
               >
                 <Icon className="h-4 w-4" />

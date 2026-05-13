@@ -8,14 +8,16 @@ import {
   UtensilsCrossed,
   CreditCard,
   Flame,
+  BadgeCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const nav = [
-  { to: "/", label: "Overview", icon: LayoutDashboard },
+  { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { to: "/qr-codes", label: "QR Codes", icon: QrCode },
   { to: "/loyalty", label: "Loyalty Program", icon: Gift },
   { to: "/customers", label: "Customers", icon: Users },
+  { to: "/employees", label: "Employees", icon: BadgeCheck },
   { to: "/notifications", label: "Notifications", icon: Bell },
   { to: "/menu", label: "Menu", icon: UtensilsCrossed },
   { to: "/billing", label: "Billing", icon: CreditCard },
@@ -23,6 +25,13 @@ const nav = [
 
 export function DashboardSidebar() {
   const location = useLocation();
+
+  const logOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("restaurantId");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
   return (
     <aside className="hidden lg:flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
       <div className="px-6 py-7 flex items-center gap-3 border-b border-sidebar-border">
@@ -46,7 +55,7 @@ export function DashboardSidebar() {
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all",
                 active
                   ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-soft"
-                  : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  : "text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
               )}
             >
               <Icon className="h-4 w-4" />
@@ -62,6 +71,9 @@ export function DashboardSidebar() {
           <Link to="/billing" className="mt-2 block text-xs text-sidebar-primary hover:underline">
             Manage subscription →
           </Link>
+        </div>
+        <div>
+          <button onClick={logOut}>log Out</button>
         </div>
       </div>
     </aside>
