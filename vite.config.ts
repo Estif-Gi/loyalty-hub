@@ -6,18 +6,4 @@
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig({
-  vite: {
-    base: "/",
-    server: {
-      host: "0.0.0.0",
-      port: 4173,
-    },
-    build: {
-      outDir: "dist",
-      emptyOutDir: true,
-      sourcemap: false,
-      target: "es2020",
-    },
-  },
-});
+export default defineConfig();
