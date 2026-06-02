@@ -2,7 +2,7 @@ FROM oven/bun:latest AS builder
 WORKDIR /app
 
 COPY bun.lockb package.json bunfig.toml ./
-RUN bun install --frozen-lockfile
+RUN bun install
 
 COPY . .
 RUN bun run build
