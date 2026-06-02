@@ -6,6 +6,8 @@ COPY package.json bun.lockb bunfig.toml ./
 RUN bun install --frozen-lockfile
 
 COPY . .
+
+ENV NITRO_PRESET=node-server
 RUN bun run build
 
 
