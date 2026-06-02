@@ -10,18 +10,24 @@ export default defineEventHandler((event) => {
   const clientDist = resolve(process.cwd(), 'dist', 'client');
 
   return serveStatic(event, {
-    getContents: (id) => readFile(join(clientDist, id)),
+    getContents: (id) => {
+      const filePath = join(clientDist, id);
+      console.log(`[static-middleware] serving content for id="${id}" from filepath="${filePath}"`);
+      return readFile(filePath);
+    },
     getMeta: async (id) => {
+      const filePath = join(clientDist, id);
       try {
-        const stats = await stat(join(clientDist, id));
+        const stats = await stat(filePath);
         if (stats.isFile()) {
+          console.log(`[static-middleware] file found for id="${id}" (size=${stats.size})`);
           return {
             size: stats.size,
             mtime: stats.mtimeMs,
           };
         }
-      } catch {
-        // Ignored, will fall through to next handler
+      } catch (err) {
+        console.log(`[static-middleware] file NOT found for id="${id}" at filepath="${filePath}":`, err instanceof Error ? err.message : err);
       }
       return undefined;
     },
