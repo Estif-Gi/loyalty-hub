@@ -8,12 +8,18 @@ export function StampCard({
   current: number;
   total: number;
   label?: string;
-}) {
+}
+
+
+) 
+
+{
   return (
     <div className="rounded-2xl bg-gradient-cream border border-border p-5 shadow-soft">
       {label && <p className="text-sm text-muted-foreground mb-3">{label}</p>}
       <div className="grid grid-cols-5 gap-2.5">
         {Array.from({ length: total }).map((_, i) => {
+          // console.log({ current, total })
           const filled = i < current;
           return (
             <div

@@ -4,6 +4,8 @@ import { Download, Share2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/layout";
 import { useAuth } from "@/lib/auth";
 
+// Usage
+
 export const Route = createFileRoute("/qr-codes")({
   head: () => ({ meta: [{ title: "QR Codes · Ember & Oak" }] }),
   component: QRPage,
@@ -45,6 +47,7 @@ function QRBlock({
             fgColor="#3a2615"
             level="H"
           />
+
         </div>
         <h3 className="font-display text-xl mt-5">{title}</h3>
         <p className="text-sm text-muted-foreground mt-1 max-w-xs">{description}</p>
@@ -80,7 +83,7 @@ function QRPage() {
           accent="loyalty"
           title="Loyalty QR"
           description="Customers scan this to earn stamps toward rewards."
-          value="https://loyalty-customer.vercel.app"
+          value="https://loyal.bahirandelivery.com/onboarding"
         />
         <QRBlock
           accent="menu"

@@ -11,6 +11,7 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 const nav = [
   { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -30,7 +31,8 @@ export function DashboardSidebar() {
     localStorage.removeItem("token");
     localStorage.removeItem("restaurantId");
     localStorage.removeItem("user");
-    window.location.href = "/login";
+    localStorage.removeItem("auth-storage");
+    window.location.href = "/";
   };
   return (
     <aside className="hidden lg:flex w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground">
@@ -39,7 +41,7 @@ export function DashboardSidebar() {
           <Flame className="h-5 w-5 text-primary-foreground" />
         </div>
         <div>
-          <p className="font-display text-lg leading-none">Ember & Oak</p>
+          <p className="font-display text-lg leading-none">Loyal</p>
           <p className="text-xs text-sidebar-foreground/60 mt-1">Loyalty Dashboard</p>
         </div>
       </div>
@@ -65,17 +67,31 @@ export function DashboardSidebar() {
         })}
       </nav>
       <div className="p-4 border-t border-sidebar-border">
-        <div className="rounded-xl bg-sidebar-accent p-4">
-          <p className="text-xs text-sidebar-foreground/70">Current plan</p>
-          <p className="font-display text-base">Bistro Pro</p>
-          <Link to="/billing" className="mt-2 block text-xs text-sidebar-primary hover:underline">
-            Manage subscription →
-          </Link>
-        </div>
-        <div>
-          <button onClick={logOut}>log Out</button>
+        <div className="rounded-xl bg-sidebar-accent p-4 flex flex-col gap-2">
+          <p className="text-[12px] text-sidebar-foreground/60">Current plan</p>
+          <div className="flex items-center justify-between">
+            <span className="font-display text-base font-semibold">Bistro Pro</span>
+            <Link
+              to="/billing"
+              className="text-xs text-sidebar-primary hover:underline transition-colors duration-100"
+              style={{ marginLeft: 8 }}
+            >
+              Manage
+            </Link>
+          </div>
+          <Button
+            onClick={logOut}
+            className="mt-3 w-full text-sm font-medium bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-accent transition-all"
+            variant="default"
+          >
+            Log out
+          </Button>
         </div>
       </div>
+ 
+        <div>
+        </div>
+      {/* </div> */}
     </aside>
   );
 }

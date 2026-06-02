@@ -45,14 +45,14 @@ function NotificationsPage() {
   // Prefer restaurantId from the Zustand store; fall back to localStorage
   const storeRestaurantId = useAuthStore((s) => s.restaurantId);
   const [restaurantId, setRestaurantId] = useState<string | null>(
-    () => storeRestaurantId ?? localStorage.getItem("restaurantId"),
+    () => storeRestaurantId ?? (typeof window !== "undefined" ? localStorage.getItem("restaurantId") : null),
   );
 
   // Keep in sync if the store value arrives later (e.g. after fetchProfile)
   useEffect(() => {
     if (storeRestaurantId) {
       setRestaurantId(storeRestaurantId);
-    } else {
+    } else if (typeof window !== "undefined") {
       const lsId = localStorage.getItem("restaurantId");
       if (lsId) setRestaurantId(lsId);
     }

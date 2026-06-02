@@ -51,7 +51,7 @@ function Overview() {
         const loyalty = u.loyalTo.find((l: any) => l.resID === restaurantId);
         return { name: u.name, stamps: loyalty?.stamps || 0 };
       })
-      ?.sort((a, b) => b.stamps - a.stamps)
+      ?.sort((a: any, b: any) => b.stamps - a.stamps)
       ?.slice(0, 5) || [];
 
   // Fallback to 0 for missing backend features
@@ -101,7 +101,7 @@ function Overview() {
             </span>
           </div>
           <ul className="divide-y divide-border">
-            {topCustomers.map((customer, index) => (
+            {topCustomers.map((customer: any, index: number) => (
               <li key={customer.name} className="py-3.5 flex items-start gap-3">
                 <div className="h-9 w-9 rounded-full bg-secondary flex items-center justify-center shrink-0">
                   <span className="text-sm font-bold text-primary">#{index + 1}</span>

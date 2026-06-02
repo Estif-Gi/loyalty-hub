@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Store, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -9,10 +9,28 @@ export const Route = createFileRoute("/login")({
   component: Login,
 });
 
+function getErrorMessage(error: unknown) {
+  if (axios.isAxiosError(error)) {
+    const responseData = error.response?.data;
+    if (responseData && typeof responseData === "object" && "message" in responseData) {
+      return (responseData as { message?: string }).message || "Failed to login";
+    }
+    if (typeof responseData === "string") {
+      return responseData;
+    }
+    return error.message || "Failed to login";
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return String(error) || "Failed to login";
+}
+
 function Login() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -20,20 +38,20 @@ function Login() {
     e.preventDefault();
     try {
       setIsLoading(true);
+      setError(null);
       const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/login`, {
         phone,
         password,
       });
       const { token, user } = res.data;
-      // console.log(token, user, "login res")
-      localStorage.setItem("token", token);
       login(token, user);
-      // console.log(res)
 
       toast.success("Logged in successfully");
       navigate({ to: "/dashboard" });
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to login");
+    } catch (error: unknown) {
+      const message = getErrorMessage(error);
+      setError(message);
+      toast.error(message);
       console.error("Login error", error);
     } finally {
       setIsLoading(false);
@@ -41,8 +59,14 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-md space-y-8 bg-card p-8 rounded-2xl shadow-soft border border-border">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 flex-col ">
+      <div className=" relative w-full max-w-md space-y-8 bg-card p-8 rounded-2xl shadow-soft border border-border">
+      {error && (
+        <div className="absolute -top-5 justify-self-center self-center max-w-sm text-center  mb-4 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-red-900">
+          {/* <p className="text-sm font-semibold">Login error</p> */}
+          <p className="mt-1 text-sm">{error === "Invalid credentials" ? "Invalid phone number or password" : error}</p>
+        </div>
+      )}
         <div className="text-center">
           <div className="mx-auto h-12 w-12 bg-primary/10 text-primary flex items-center justify-center rounded-full mb-4">
             <Store className="h-6 w-6" />

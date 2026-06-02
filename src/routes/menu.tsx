@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Plus, Eye, X, Loader2 } from "lucide-react";
+import { Plus, Eye, X, Loader2, Pencil, Trash2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/layout";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
@@ -25,6 +25,8 @@ const empty: Omit<MenuItem, "_id"> = { name: "", price: 0, category: "Mains", de
 
 function MenuPage() {
   const [adding, setAdding] = useState<boolean>(false);
+  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [preview, setPreview] = useState(false);
   const { restaurantId } = useAuth();
   const queryClient = useQueryClient();
@@ -68,6 +70,37 @@ function MenuPage() {
     onError: () => toast.error("Failed to add item"),
   });
 
+  const updateItemMutation = useMutation({
+    mutationFn: async (item: MenuItem) => {
+      await api.patch(`/menus/${menuObj._id}/items/${item._id}`, {
+        name: item.name,
+        description: item.description,
+        price: item.price,
+      });
+    },
+    onSuccess: () => {
+      toast.success("Item updated!");
+      queryClient.invalidateQueries({ queryKey: ["menus"] });
+      setEditingItem(null);
+    },
+    onError: () => toast.error("Failed to update item"),
+  });
+
+  const removeItemMutation = useMutation({
+    mutationFn: async (itemIdOrIds: string | string[]) => {
+      const itemIds = Array.isArray(itemIdOrIds) ? itemIdOrIds : [itemIdOrIds];
+      await api.delete(`/menus/${menuObj._id}/items`, {
+        data: { itemIds }, // axios requires `data` key for DELETE request bodies
+      });
+    },
+    onSuccess: () => {
+      toast.success("Item removed!");
+      queryClient.invalidateQueries({ queryKey: ["menus"] });
+      setSelectedIds(new Set());
+    },
+    onError: () => toast.error("Failed to remove item"),
+  });
+
   const save = (item: any) => {
     if (!menuObj) {
       createMenuMutation.mutate(item);
@@ -96,6 +129,23 @@ function MenuPage() {
           >
             <Plus className="h-4 w-4" /> Add item
           </button>
+          <button
+            onClick={() => {
+              const ids = Array.from(selectedIds);
+              if (ids.length === 0) return;
+              if (!confirm(`Remove ${ids.length} selected item(s)?`)) return;
+              removeItemMutation.mutate(ids);
+            }}
+            disabled={selectedIds.size === 0 || removeItemMutation.isPending}
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-medium hover:bg-secondary disabled:opacity-50"
+          >
+            {removeItemMutation.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Trash2 className="h-4 w-4" />
+            )}
+            Remove selected
+          </button>
         </>
       }
     >
@@ -111,18 +161,58 @@ function MenuPage() {
               className="rounded-2xl bg-card border border-border p-5 shadow-soft hover:shadow-warm transition-all"
             >
               <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">
-                    {item.category || "Mains"}
-                  </span>
-                  <h3 className="font-display text-lg mt-2 truncate">{item.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                    {item.description}
-                  </p>
+                <div className="min-w-0 flex items-start gap-3">
+                  {item._id && (
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(item._id)}
+                      onChange={() => {
+                        if (!item._id) return;
+                        const next = new Set(selectedIds);
+                        if (next.has(item._id)) next.delete(item._id);
+                        else next.add(item._id);
+                        setSelectedIds(next);
+                      }}
+                      className="mt-1"
+                    />
+                  )}
+                  <div>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground">
+                      {item.category || "Mains"}
+                    </span>
+                    <h3 className="font-display text-lg mt-2 truncate">{item.name}</h3>
+                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
                 <span className="font-display text-xl text-primary shrink-0">
                   ${(item.price || 0).toFixed(2)}
                 </span>
+              </div>
+              <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
+                <button
+                  onClick={() => setEditingItem(item)}
+                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border hover:bg-secondary"
+                >
+                  <Pencil className="h-3 w-3" /> Edit
+                </button>
+                <button
+                  onClick={() => {
+                    if (!item._id) return;
+                    if (!confirm(`Remove "${item.name}"?`)) return;
+                    removeItemMutation.mutate(item._id);
+                  }}
+                  disabled={removeItemMutation.isPending}
+                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-border text-destructive hover:bg-destructive/10 disabled:opacity-50"
+                >
+                  {removeItemMutation.isPending ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-3 w-3" />
+                  )}
+                  Remove
+                </button>
               </div>
             </div>
           ))}
@@ -141,6 +231,17 @@ function MenuPage() {
             onSave={save}
             onCancel={() => setAdding(false)}
             isLoading={createMenuMutation.isPending || addItemMutation.isPending}
+          />
+        </Modal>
+      )}
+
+      {editingItem && (
+        <Modal onClose={() => setEditingItem(null)} title="Edit item">
+          <ItemForm
+            initial={editingItem}
+            onSave={(updated) => updateItemMutation.mutate({ ...editingItem, ...updated })}
+            onCancel={() => setEditingItem(null)}
+            isLoading={updateItemMutation.isPending}
           />
         </Modal>
       )}
