@@ -94,11 +94,23 @@ function Register() {
         }
       }
 
-      // Update local user object with the new restaurant ID for state consistency
+      // 5. Update local user object with the new restaurant ID for state consistency
       const updatedUser = { ...user, restaurantId };
       login(token, updatedUser);
 
       toast.success(plan && plan !== "free" ? `Welcome! Your restaurant is ready on the ${plan.charAt(0).toUpperCase() + plan.slice(1)} plan.` : "Welcome! Your restaurant is ready.");
+
+      // 6. Create an empty menu — runs last so the restaurant is fully persisted
+      try {
+        await api.post(
+          "/api/menus",
+          { restaurantId, items: [] },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } catch (menuErr) {
+        console.error("Failed to create menu:", menuErr);
+      }
+
       navigate({ to: "/dashboard" });
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Registration failed. Please try again.");
@@ -313,4 +325,3 @@ function Register() {
     </div>
   );
 }
-
