@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { X, Download } from "lucide-react";
+import { X, Download, Chrome } from "lucide-react";
 
 export const Route = createFileRoute("/employees")({
   component: Employees,
@@ -184,8 +184,13 @@ function Employees() {
 
             {qrValue && (
               <div className="mt-8 flex flex-col items-center animate-in fade-in zoom-in duration-300">
-                <div className="p-4 bg-white rounded-2xl shadow-sm border border-border/50">
-                  <QRCodeSVG value={qrValue} size={180} />
+                <div className="relative">
+                  <div className="p-4 bg-white rounded-2xl shadow-sm border border-border/50">
+                    <QRCodeSVG value={qrValue} size={180} />
+                  </div>
+                  <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1.5 shadow-md" title="Works best in Chrome">
+                    <Chrome className="w-4 h-4" />
+                  </div>
                 </div>
                 <p className="text-center mt-4 text-sm text-muted-foreground bg-secondary/50 px-4 py-2 rounded-lg">
                   Have <strong>{name}</strong> scan this QR code with their phone to complete setup.
@@ -254,8 +259,13 @@ function Employees() {
           </DialogHeader>
 
           <div className="flex flex-col items-center gap-4 py-2">
-            <div className="p-4 bg-white rounded-2xl border border-border/50 shadow-sm">
-              {selectedEmpQr && <QRCodeSVG value={selectedEmpQr} size={200} />}
+            <div className="relative">
+              <div className="p-4 bg-white rounded-2xl border border-border/50 shadow-sm">
+                {selectedEmpQr && <QRCodeSVG value={selectedEmpQr} size={200} />}
+              </div>
+              <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1.5 shadow-md" title="Works best in Chrome">
+                <Chrome className="w-4 h-4" />
+              </div>
             </div>
 
             {/* Download button */}

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { QRCodeSVG } from "qrcode.react";
-import { Download, Share2 } from "lucide-react";
+import { Download, Share2, Chrome } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/layout";
 import { useAuth } from "@/lib/auth";
 
@@ -78,6 +78,13 @@ function QRPage() {
       title="QR Codes"
       subtitle="Print, share, and place these around your restaurant."
     >
+      <div className="mb-6 p-4 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 flex items-center gap-3">
+        <Chrome className="h-5 w-5 text-blue-600 flex-shrink-0" />
+        <div>
+          <p className="font-medium text-blue-900">Best experience with Chrome</p>
+          <p className="text-sm text-blue-700">For optimal QR code scanning and features, we recommend using Google Chrome.</p>
+        </div>
+      </div>
       <div className="grid md:grid-cols-2 gap-6">
         <QRBlock
           accent="loyalty"
