@@ -148,13 +148,21 @@ function LandingPage() {
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;}
         :root{--b50:#faf7f2;--b100:#f5ede0;--b200:#e8d5be;--b300:#d4b896;--b400:#c09a6e;--b500:#a97c4a;--b600:#8a6035;--b700:#6b4826;--b800:#4e321a;--b900:#2c1f0e;--amber:#d97706;--amber2:#b45309;--amber3:#92400e;}
-        .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(250,247,242,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--b200);padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;}
-        .logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--b800);text-decoration:none;}
-        .logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--amber),var(--amber3));border-radius:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(217,119,6,.35);}
-        .btn-ghost{padding:8px 18px;border-radius:8px;font-size:14px;font-weight:500;color:var(--b600);background:transparent;border:none;cursor:pointer;text-decoration:none;transition:all .15s;}
-        .btn-ghost:hover{background:var(--b100);color:var(--b800);}
-        .btn-nav{padding:10px 22px;border-radius:10px;font-size:14px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--amber),var(--amber2));border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(180,83,9,.3);transition:all .2s;}
-        .btn-nav:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(180,83,9,.4);}
+        .nav{position:fixed;top:16px;left:0;right:0;z-index:100;padding:0 32px;pointer-events:none;}
+        .nav-inner{max-width:1160px;margin:0 auto;height:64px;padding:0 10px 0 14px;border:1px solid rgba(232,213,190,.72);border-radius:18px;background:rgba(250,247,242,.78);backdrop-filter:blur(22px) saturate(145%);box-shadow:0 18px 60px rgba(44,31,14,.12),inset 0 1px 0 rgba(255,255,255,.75);display:flex;align-items:center;justify-content:space-between;pointer-events:auto;}
+        .logo{display:flex;align-items:center;gap:11px;color:var(--b900);text-decoration:none;min-width:0;}
+        .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--amber),var(--amber3));border-radius:13px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(217,119,6,.32),inset 0 1px 0 rgba(255,255,255,.26);}
+        .logo-copy{display:flex;flex-direction:column;line-height:1;}
+        .logo-name{font-family:'Playfair Display',serif;font-size:21px;font-weight:800;color:var(--b900);letter-spacing:-.01em;}
+        .logo-sub{font-size:10px;font-weight:800;color:var(--b500);letter-spacing:.16em;text-transform:uppercase;margin-top:4px;}
+        .nav-links{display:flex;align-items:center;gap:4px;margin-left:34px;margin-right:auto;}
+        .nav-link{padding:9px 13px;border-radius:10px;font-size:13px;font-weight:700;color:var(--b600);text-decoration:none;transition:background .18s ease,color .18s ease;}
+        .nav-link:hover{background:rgba(245,237,224,.86);color:var(--b900);}
+        .nav-actions{display:flex;align-items:center;gap:8px;}
+        .btn-ghost{padding:10px 16px;border-radius:12px;font-size:14px;font-weight:800;color:var(--b700);background:rgba(255,255,255,.38);border:1px solid rgba(232,213,190,.8);cursor:pointer;text-decoration:none;transition:all .18s ease;white-space:nowrap;}
+        .btn-ghost:hover{background:white;color:var(--b900);border-color:var(--b300);transform:translateY(-1px);}
+        .btn-nav{min-height:42px;padding:0 18px;border-radius:13px;font-size:14px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--amber),var(--amber2));border:1px solid rgba(255,255,255,.18);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;box-shadow:0 10px 24px rgba(180,83,9,.28);transition:all .2s ease;white-space:nowrap;}
+        .btn-nav:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(180,83,9,.36);}
         .hero-wrap{position:relative;overflow:hidden;background:linear-gradient(155deg,#1a0f05 0%,#2c1f0e 40%,#4e321a 70%,#6b4826 100%);min-height:100vh;display:flex;flex-direction:column;}
         .hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 65% 45%,rgba(217,119,6,.2) 0%,transparent 65%);pointer-events:none;}
         .hero-content{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:210px 40px 80px;display:grid;grid-template-columns:1.1fr .9fr;gap:72px;align-items:center;width:100%;}
@@ -262,24 +270,36 @@ function LandingPage() {
         .sec-label{text-align:center;font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px;}
         .sec-title{font-family:'Playfair Display',serif;font-size:42px;font-weight:800;text-align:center;color:var(--b900);margin-bottom:56px;line-height:1.15;}
         .sec-title-light{font-family:'Playfair Display',serif;font-size:42px;font-weight:800;text-align:center;color:#faf7f2;margin-bottom:56px;line-height:1.15;}
-        @media(max-width:768px){.hero-content{grid-template-columns:1fr;padding:100px 24px 60px;gap:36px;}.hero h1{font-size:40px;}.mock-anim{display:none;}.feat-grid,.steps-grid,.pricing-grid,.test-grid{grid-template-columns:1fr;}.stats-grid{grid-template-columns:1fr 1fr;}.pain-grid{grid-template-columns:1fr;}.nav{padding:0 20px;}}
+        @media(max-width:900px){.nav-links{display:none;}.nav-inner{height:60px;border-radius:16px;}.logo-sub{display:none;}.btn-ghost{display:none;}.btn-nav{min-height:40px;padding:0 14px;font-size:13px;}.nav{top:10px;padding:0 14px;}}
+        @media(max-width:768px){.hero-content{grid-template-columns:1fr;padding:100px 24px 60px;gap:36px;}.hero h1{font-size:40px;}.mock-anim{display:none;}.feat-grid,.steps-grid,.pricing-grid,.test-grid{grid-template-columns:1fr;}.stats-grid{grid-template-columns:1fr 1fr;}.pain-grid{grid-template-columns:1fr;}}
+        @media(max-width:420px){.logo-name{font-size:19px;}.logo-icon{width:36px;height:36px;border-radius:12px;}.btn-nav{padding:0 12px;}.btn-nav svg{display:none;}}
       `}</style>
 
       {/* NAV */}
       <nav className="nav">
-        <a href="/" className="logo">
-          <div className="logo-icon"><Flame size={19} color="white" /></div>
-          Loyal
-        </a>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {isAuthenticated ? (
-            <Link to="/dashboard" className="btn-nav">Dashboard <ArrowRight size={15} /></Link>
-          ) : (
-            <>
-              <Link to="/login" className="btn-ghost">Log in</Link>
-              <Link to="/register" className="btn-nav">Get started free <ArrowRight size={15} /></Link>
-            </>
-          )}
+        <div className="nav-inner">
+          <a href="/" className="logo">
+            <div className="logo-icon"><Flame size={19} color="white" /></div>
+            <span className="logo-copy">
+              <span className="logo-name">Loyal</span>
+              <span className="logo-sub">Restaurant hub</span>
+            </span>
+          </a>
+          <div className="nav-links" aria-label="Landing page sections">
+            <a href="#how" className="nav-link">How it works</a>
+            <a href="#features" className="nav-link">Features</a>
+            <a href="#pricing" className="nav-link">Pricing</a>
+          </div>
+          <div className="nav-actions">
+            {isAuthenticated ? (
+              <Link to="/dashboard" className="btn-nav">Dashboard <ArrowRight size={15} /></Link>
+            ) : (
+              <>
+                <Link to="/login" className="btn-ghost">Log in</Link>
+                <Link to="/register" className="btn-nav">Get started free <ArrowRight size={15} /></Link>
+              </>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -400,14 +420,14 @@ function LandingPage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="how-section" ref={howRef}>
+      <section id="how" className="how-section" ref={howRef}>
         <div className="sec-label">How it works</div>
         <div className="sec-title">From sign-up to regulars in 3 steps</div>
         <div className="steps-grid">
           {[
             { n: "1", title: "Design your stamp card", desc: "Pick a template, add your branding and reward. Looks stunning on every phone. Takes about 8 minutes.", delay: "d1" },
             { n: "2", title: "Guests scan & collect", desc: "Customers scan a QR code at checkout. No app download needed. Stamps live right in their browser.", delay: "d2" },
-            { n: "3", title: "Watch them come back", desc: "Send a push when someone's close to a reward. See who visits most. Keep your tables full.", delay: "d3" },
+            { n: "3", title: "Watch them come back", desc: "Send a message when someone's close to a reward. See who visits most. Keep your tables full.", delay: "d3" },
           ].map((s) => (
             <div key={s.n} className={`step-card reveal ${s.delay} ${howVisible ? "show" : ""}`}>
               <div className="step-num">{s.n}</div>
@@ -419,7 +439,7 @@ function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section className="feat-section" ref={featRef}>
+      <section id="features" className="feat-section" ref={featRef}>
         <div className="sec-label">Features</div>
         <div className="sec-title">Everything a busy owner needs</div>
         <div className="feat-grid">
@@ -478,7 +498,7 @@ function LandingPage() {
       </div>
 
       {/* PRICING */}
-      <section className="pricing-section" ref={priceRef}>
+      <section id="pricing" className="pricing-section" ref={priceRef}>
         <div className="sec-label">Pricing</div>
         <div className="sec-title">Start free. Scale when it pays off.</div>
         <div className="pricing-grid">
