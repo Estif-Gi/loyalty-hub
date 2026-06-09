@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Send, Megaphone, Tag, Sparkles, Loader2, Users, Clock } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/layout";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -9,6 +9,8 @@ import { db } from "@/lib/firebase";
 import { useAuthStore } from "@/store";
 import axios from "axios";
 import { Switch } from "@/components/ui/switch";
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
 import {
   CircularInput,
   CircularTrack,
@@ -41,6 +43,25 @@ const templates = [
     message: "Earn 2 loyalty stamps on every order tonight only.",
   },
 ];
+
+const AnimatedItem = ({ children, delay = 0, index, onMouseEnter, onClick }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { amount: 0.2, triggerOnce: false });
+  return (
+    <motion.div
+      ref={ref}
+      data-index={index}
+      onMouseEnter={onMouseEnter}
+      onClick={onClick}
+      initial={{ scale: 0.7, opacity: 0 }}
+      animate={inView ? { scale: 1, opacity: 1 } : { scale: 0.7, opacity: 0 }}
+      transition={{ duration: 0.1, delay }}
+      className="mb-4 cursor-pointer"
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 function NotificationsPage() {
   const [title, setTitle] = useState("");
@@ -453,44 +474,43 @@ function NotificationsPage() {
 
             {notificationHistoryQuery.data?.length > 0 && (
               <div className="max-h-[340px] overflow-y-auto -mx-1 px-1 space-y-3 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent">
-                {notificationHistoryQuery.data.map((item: any) => (
-                  <div
-                    key={item._id || item.id}
-                    className="rounded-xl border border-border bg-background p-3.5"
-                  >
-                    <div className="flex items-start justify-between gap-2 mb-1">
-                      <p className="font-semibold text-sm leading-snug">
-                        {item.title}
+                {notificationHistoryQuery.data.map((item: any, index: number) => (
+                  <AnimatedItem key={item._id || item.id} delay={index * 0.05} index={index}>
+                    <div className="rounded-xl border border-border bg-background p-3.5">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <p className="font-semibold text-sm leading-snug">
+                          {item.title}
+                        </p>
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
+                            item.status === "sent"
+                              ? "bg-success/10 text-success"
+                              : "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          {item.status}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {item.description}
                       </p>
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
-                          item.status === "sent"
-                            ? "bg-success/10 text-success"
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {item.status}
-                      </span>
+                      <div className="mt-2.5 flex items-center gap-3 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <Users className="h-3 w-3" />
+                          {item.sentCount} delivered
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {new Date(item.createdAt).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      </div>
                     </div>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {item.description}
-                    </p>
-                    <div className="mt-2.5 flex items-center gap-3 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <Users className="h-3 w-3" />
-                        {item.sentCount} delivered
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {new Date(item.createdAt).toLocaleDateString(undefined, {
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
-                    </div>
-                  </div>
+                  </AnimatedItem>
                 ))}
               </div>
             )}
