@@ -96,7 +96,7 @@ function QRPage() {
           accent="menu"
           title="Menu QR"
           description="Opens the digital menu on the customer's phone."
-          value={`https://loyalty-customer.vercel.app/menu/${restaurantId}`}
+          value={`https://loyal.bahirandelivery.com/menu/${restaurantId}`}
         />
       </div>
     </DashboardLayout>
