@@ -10,17 +10,22 @@ import {
   UtensilsCrossed,
   CreditCard,
   BadgeCheck,
+  Table,
+  Sliders,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const nav = [
   { to: "/dashboard", label: "Overview", icon: LayoutDashboard },
-  { to: "/qr-codes", label: "QR Codes", icon: QrCode },
-  { to: "/loyalty", label: "Loyalty", icon: Gift },
-  { to: "/customers", label: "Customers", icon: Users },
-  { to: "/employees", label: "Employees", icon: BadgeCheck },
-  { to: "/notifications", label: "Notifications", icon: BellIcon },
   { to: "/menu", label: "Menu", icon: UtensilsCrossed },
+  { to: "/tables", label: "Tables", icon: Table },
+  { to: "/employees", label: "Employees", icon: BadgeCheck },
+  { to: "/qr-codes", label: "QR Codes", icon: QrCode },
+  { to: "/orders", label: "Orders", icon: ClipboardList },
+  { to: "/loyalty", label: "Loyalty Program", icon: Gift },
+  { to: "/customers", label: "Customers", icon: Users },
+  { to: "/notifications", label: "Notifications", icon: BellIcon },
   { to: "/billing", label: "Billing", icon: CreditCard },
 ] as const;
 

@@ -51,13 +51,18 @@ api.interceptors.response.use(
       status === 402 ||
       (status === 403 && /limit|upgrade|subscription|plan/i.test(errorMsg)) ||
       (status === 400 && /limit|upgrade|subscription|plan/i.test(errorMsg)) ||
-      /subscription limit|limit reached|reached your limit|upgrade your plan|billing status/i.test(errorMsg);
+      /subscription limit|limit reached|reached your limit|upgrade your plan|billing status/i.test(
+        errorMsg,
+      );
 
     if (isLimitError) {
-      useAuthStore.getState().setLimitModalOpen(
-        true,
-        errorMsg || "You have reached the limit of your current subscription. Please update your billing status to continue."
-      );
+      useAuthStore
+        .getState()
+        .setLimitModalOpen(
+          true,
+          errorMsg ||
+            "You have reached the limit of your current subscription. Please update your billing status to continue.",
+        );
     }
     return Promise.reject(error);
   },

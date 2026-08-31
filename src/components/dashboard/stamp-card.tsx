@@ -8,12 +8,7 @@ export function StampCard({
   current: number;
   total: number;
   label?: string;
-}
-
-
-) 
-
-{
+}) {
   return (
     <div className="rounded-2xl bg-gradient-cream border border-border p-5 shadow-soft">
       {label && <p className="text-sm text-muted-foreground mb-3">{label}</p>}

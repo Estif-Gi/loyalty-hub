@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 export type MenuItem = {
   _id?: string;
@@ -16,7 +17,10 @@ export type MenuItem = {
   image?: string;
 };
 
+import { requireOwner } from "@/lib/auth";
+
 export const Route = createFileRoute("/menu")({
+  beforeLoad: requireOwner,
   head: () => ({ meta: [{ title: "Menu · Ember & Oak" }] }),
   component: MenuPage,
 });
@@ -188,7 +192,7 @@ function MenuPage() {
                   </div>
                 </div>
                 <span className="font-display text-xl text-primary shrink-0">
-                  ${(item.price || 0).toFixed(2)}
+                  {formatCurrency(item.price || 0)}
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
@@ -272,7 +276,7 @@ function MenuPage() {
                           </p>
                         </div>
                         <span className="text-sm font-display text-primary shrink-0">
-                          ${(i.price || 0).toFixed(2)}
+                          {formatCurrency(i.price || 0)}
                         </span>
                       </li>
                     ))}
@@ -339,7 +343,7 @@ function ItemForm({
         />
       </Field>
       <div className="grid grid-cols-2 gap-3">
-        <Field label="Price ($)">
+        <Field label="Price (ETB)">
           <input
             type="number"
             step="0.01"

@@ -49,7 +49,11 @@ export function applyThemeColor(oklchColor: string | null | undefined): void {
 
   // Generate derived colors from the base
   const primary = { l: Math.min(base.l, 0.5), c: base.c, h: base.h };
-  const primaryGlow = { l: Math.min(base.l + 0.17, 0.85), c: Math.min(base.c + 0.04, 0.3), h: base.h };
+  const primaryGlow = {
+    l: Math.min(base.l + 0.17, 0.85),
+    c: Math.min(base.c + 0.04, 0.3),
+    h: base.h,
+  };
   const accent = { l: base.l, c: base.c, h: base.h };
   const ring = { l: primaryGlow.l, c: primaryGlow.c, h: base.h };
 
@@ -78,7 +82,10 @@ export function applyThemeColor(oklchColor: string | null | undefined): void {
   el.style.setProperty("--sidebar-ring", toOklch(sidebarPrimary));
 
   // Gradients & shadows
-  el.style.setProperty("--gradient-warm", `linear-gradient(135deg, ${toOklch(primaryGlow)}, ${toOklch(accent)})`);
+  el.style.setProperty(
+    "--gradient-warm",
+    `linear-gradient(135deg, ${toOklch(primaryGlow)}, ${toOklch(accent)})`,
+  );
   el.style.setProperty("--shadow-warm", `0 10px 30px -12px ${toOklch(primary, 0.25)}`);
   el.style.setProperty("--shadow-soft", `0 2px 12px -4px ${toOklch(primary, 0.12)}`);
 }

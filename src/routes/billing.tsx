@@ -7,35 +7,19 @@ import { useAuthStore } from "@/store/auth.store";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { requireOwner } from "@/lib/auth";
+
 export const Route = createFileRoute("/billing")({
+  beforeLoad: requireOwner,
   head: () => ({ meta: [{ title: "Billing · Ember & Oak" }] }),
   component: BillingPage,
 });
 
 function BillingPage() {
-  const { billingStatus, restaurantId } = useAuth();
-  const updateBillingStatus = useAuthStore((s) => s.updateBillingStatus);
-  const [updatingPlan, setUpdatingPlan] = useState<string | null>(null);
+  const { billingStatus } = useAuth();
 
   const currentPlanId = billingStatus || "free";
   const currentPlan = BILLING_PLANS.find((p) => p.id === currentPlanId) || BILLING_PLANS[0];
-
-  const handlePlanChange = async (planId: string) => {
-    if (!restaurantId) {
-      toast.error("Restaurant ID not found. Please log in again.");
-      return;
-    }
-
-    try {
-      setUpdatingPlan(planId);
-      await updateBillingStatus(restaurantId, planId);
-      toast.success(`Plan updated to ${planId.charAt(0).toUpperCase() + planId.slice(1)} successfully!`);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to update plan. Please try again.");
-    } finally {
-      setUpdatingPlan(null);
-    }
-  };
 
   return (
     <DashboardLayout title="Subscription & Billing" subtitle="Manage your plan and payment method.">
@@ -43,7 +27,7 @@ function BillingPage() {
         <div className="lg:col-span-2 rounded-2xl bg-gradient-warm text-primary-foreground p-6 shadow-warm relative overflow-hidden">
           {/* Decorative background circle */}
           <div className="absolute right-[-10%] top-[-30%] w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-          
+
           <p className="text-primary-foreground/80 text-sm">Current plan</p>
           <h2 className="font-display text-3xl mt-1 flex items-center gap-2">
             {currentPlan.name}
@@ -65,7 +49,7 @@ function BillingPage() {
             </span>
           </div>
         </div>
-        
+
         <div className="rounded-2xl bg-card border border-border p-6 shadow-soft">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
@@ -76,8 +60,12 @@ function BillingPage() {
               <p className="text-xs text-muted-foreground">Expires 09/27</p>
             </div>
           </div>
-          <button 
-            onClick={() => toast.info("Payment updates are automatically handled based on selected plan. Contact support for customized integrations.")}
+          <button
+            onClick={() =>
+              toast.info(
+                "Payment updates are automatically handled based on selected plan. Contact support for customized integrations.",
+              )
+            }
             className="mt-5 w-full rounded-lg border border-border px-3 py-2 text-sm hover:bg-secondary transition-colors"
           >
             Update payment method
@@ -85,12 +73,11 @@ function BillingPage() {
         </div>
       </div>
 
-      <h2 className="font-display text-xl mb-4">Change plan</h2>
+      <h2 className="font-display text-xl mb-4">Subscription Tiers</h2>
       <div className="grid md:grid-cols-4 gap-4">
         {BILLING_PLANS.map((p) => {
           const isCurrent = p.id === currentPlanId;
-          const isPending = updatingPlan === p.id;
-          
+
           return (
             <div
               key={p.id}
@@ -127,30 +114,23 @@ function BillingPage() {
                 </ul>
               </div>
               <button
-                disabled={isCurrent || !!updatingPlan}
-                onClick={() => handlePlanChange(p.id)}
+                disabled
                 className={`mt-6 w-full rounded-lg px-3 py-2 text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
                   isCurrent
                     ? "bg-secondary text-muted-foreground cursor-default"
-                    : "bg-primary text-primary-foreground hover:bg-primary-glow active:scale-[0.98] disabled:opacity-50"
+                    : "bg-muted text-muted-foreground cursor-not-allowed border border-border"
                 }`}
               >
-                {isPending ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" /> Updating...
-                  </>
-                ) : isCurrent ? (
-                  "Current plan"
-                ) : p.price > currentPlan.price ? (
-                  "Upgrade"
-                ) : (
-                  "Downgrade"
-                )}
+                {isCurrent ? "Current plan" : "Available Tier"}
               </button>
             </div>
           );
         })}
       </div>
+      <p className="text-center mt-8 text-sm text-muted-foreground">
+        Subscription plans are managed by the platform administration. Please contact support at
+        support@loyaltyhub.com to upgrade or downgrade your tier.
+      </p>
     </DashboardLayout>
   );
 }

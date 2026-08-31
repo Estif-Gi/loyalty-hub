@@ -18,7 +18,10 @@ import {
   CircularThumb,
 } from "react-circular-input";
 
+import { requireOwner } from "@/lib/auth";
+
 export const Route = createFileRoute("/notifications")({
+  beforeLoad: requireOwner,
   head: () => ({ meta: [{ title: "Notifications · Ember & Oak" }] }),
   component: NotificationsPage,
 });
@@ -74,9 +77,7 @@ function NotificationsPage() {
   const [restaurantId, setRestaurantId] = useState<string | null>(
     () =>
       storeRestaurantId ??
-      (typeof window !== "undefined"
-        ? localStorage.getItem("restaurantId")
-        : null),
+      (typeof window !== "undefined" ? localStorage.getItem("restaurantId") : null),
   );
 
   useEffect(() => {
@@ -116,9 +117,7 @@ function NotificationsPage() {
       if (!restaurantId) throw new Error("Restaurant ID is required");
 
       const endpoint =
-        isFaithful && isTargeted
-          ? `${BASE}/notifications/targeted`
-          : `${BASE}/notifications`;
+        isFaithful && isTargeted ? `${BASE}/notifications/targeted` : `${BASE}/notifications`;
       const payload =
         isFaithful && isTargeted
           ? {
@@ -149,9 +148,7 @@ function NotificationsPage() {
           failedCount: notification.failedCount,
           status: notification.status,
           createdAt: serverTimestamp(),
-        }).catch((err) =>
-          console.error("[Firestore] notification save failed:", err),
-        );
+        }).catch((err) => console.error("[Firestore] notification save failed:", err));
       }
 
       queryClient.invalidateQueries({
@@ -168,9 +165,7 @@ function NotificationsPage() {
     },
     onError: (error: Error) => {
       const msg =
-        (error as any).response?.data?.message ??
-        error.message ??
-        "Failed to send notification";
+        (error as any).response?.data?.message ?? error.message ?? "Failed to send notification";
       toast.error(msg);
     },
   });
@@ -199,9 +194,7 @@ function NotificationsPage() {
         <div className="rounded-2xl bg-card border border-border p-6 shadow-soft space-y-5">
           <div>
             <h2 className="font-display text-xl font-semibold">Compose</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Sent to all opted-in customers.
-            </p>
+            <p className="text-sm text-muted-foreground mt-0.5">Sent to all opted-in customers.</p>
           </div>
 
           {/* Title */}
@@ -268,9 +261,7 @@ function NotificationsPage() {
                     >
                       Targeted send
                     </label>
-                    <p className="text-xs text-muted-foreground">
-                      Loyal customers only
-                    </p>
+                    <p className="text-xs text-muted-foreground">Loyal customers only</p>
                   </div>
                 </div>
                 <Switch
@@ -283,9 +274,7 @@ function NotificationsPage() {
 
               {isTargeted && (
                 <div className="pt-4 border-t border-border/50 space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
-                  <p className="text-sm font-medium text-foreground">
-                    Minimum stamps required
-                  </p>
+                  <p className="text-sm font-medium text-foreground">Minimum stamps required</p>
 
                   <div className="flex items-center gap-6 justify-center">
                     {/* Circular dial */}
@@ -339,10 +328,8 @@ function NotificationsPage() {
                     <Sparkles className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                     <p className="text-xs text-muted-foreground leading-relaxed">
                       Each recipient also earns{" "}
-                      <strong className="text-foreground font-medium">
-                        1 bonus stamp
-                      </strong>{" "}
-                      for this notification.
+                      <strong className="text-foreground font-medium">1 bonus stamp</strong> for
+                      this notification.
                     </p>
                   </div>
                 </div>
@@ -424,9 +411,7 @@ function NotificationsPage() {
                 </div>
                 <p className="font-semibold text-sm leading-snug">
                   {title || (
-                    <span className="text-muted-foreground/60">
-                      Your title appears here
-                    </span>
+                    <span className="text-muted-foreground/60">Your title appears here</span>
                   )}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
@@ -457,20 +442,15 @@ function NotificationsPage() {
             )}
 
             {notificationHistoryQuery.isError && (
-              <p className="text-sm text-destructive py-2">
-                Could not load history.
-              </p>
+              <p className="text-sm text-destructive py-2">Could not load history.</p>
             )}
 
-            {!notificationHistoryQuery.isLoading &&
-              notificationHistoryQuery.data?.length === 0 && (
-                <div className="py-8 text-center">
-                  <Megaphone className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">
-                    No notifications sent yet.
-                  </p>
-                </div>
-              )}
+            {!notificationHistoryQuery.isLoading && notificationHistoryQuery.data?.length === 0 && (
+              <div className="py-8 text-center">
+                <Megaphone className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">No notifications sent yet.</p>
+              </div>
+            )}
 
             {notificationHistoryQuery.data?.length > 0 && (
               <div className="max-h-[340px] overflow-y-auto -mx-1 px-1 space-y-3 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent">
@@ -478,9 +458,7 @@ function NotificationsPage() {
                   <AnimatedItem key={item._id || item.id} delay={index * 0.05} index={index}>
                     <div className="rounded-xl border border-border bg-background p-3.5">
                       <div className="flex items-start justify-between gap-2 mb-1">
-                        <p className="font-semibold text-sm leading-snug">
-                          {item.title}
-                        </p>
+                        <p className="font-semibold text-sm leading-snug">{item.title}</p>
                         <span
                           className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
                             item.status === "sent"

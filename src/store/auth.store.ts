@@ -92,14 +92,17 @@ export const useAuthStore = create<AuthState>()(
       updateBillingStatus: async (restaurantId, status) => {
         const { token } = get();
         if (!token) throw new Error("No authorization token found");
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/restaurants/${restaurantId}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/restaurants/${restaurantId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ billingStatus: status }),
           },
-          body: JSON.stringify({ billingStatus: status }),
-        });
+        );
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
           throw new Error(errData.message || "Failed to update billing status");
@@ -169,6 +172,7 @@ export const useAuthStore = create<AuthState>()(
       // Only persist these fields — avoid persisting derived/action state
       partialize: (state) => ({
         token: state.token,
+        user: state.user,
         restaurantId: state.restaurantId,
         isAuthenticated: state.isAuthenticated,
         themeColor: state.themeColor,

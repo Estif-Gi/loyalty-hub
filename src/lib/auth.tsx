@@ -65,6 +65,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
  * Drop-in replacement for the old `useAuth()` hook.
  * Components importing this do NOT need any changes.
  */
+import { redirect } from "@tanstack/react-router";
+
+export function requireOwner() {
+  const { isAuthenticated, user } = useAuthStore.getState();
+  if (!isAuthenticated || user?.role !== "owner") {
+    throw redirect({ to: "/login" });
+  }
+}
+
 export function useAuth() {
   const token = useAuthStore((s) => s.token);
   const user = useAuthStore((s) => s.user);

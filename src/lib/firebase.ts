@@ -12,17 +12,12 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID as string,
   appId: import.meta.env.VITE_FIREBASE_APP_ID as string,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID as string,
-
 };
-
-
 
 const app = initializeApp(firebaseConfig);
 const analytics = typeof window !== "undefined" ? getAnalytics(app) : null;
 const db = typeof window !== "undefined" ? getFirestore(app) : null;
 const messaging = typeof window !== "undefined" ? getMessaging(app) : null;
-
-
 
 // export { app, analytics, db, messaging };
 // import { initializeApp } from "firebase/app";
@@ -44,4 +39,3 @@ const messaging = typeof window !== "undefined" ? getMessaging(app) : null;
 // const analytics = typeof window !== "undefined" ? getAnalytics(app) : null;
 // const db = typeof window !== "undefined" ? getFirestore(app) : null;
 // const messaging = typeof window !== "undefined" ? getMessaging(app) : null;
-

@@ -61,12 +61,14 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 flex-col ">
       <div className=" relative w-full max-w-md space-y-8 bg-card p-8 rounded-2xl shadow-soft border border-border">
-      {error && (
-        <div className="absolute -top-5 justify-self-center self-center max-w-sm text-center  mb-4 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-red-900">
-          {/* <p className="text-sm font-semibold">Login error</p> */}
-          <p className="mt-1 text-sm">{error === "Invalid credentials" ? "Invalid phone number or password" : error}</p>
-        </div>
-      )}
+        {error && (
+          <div className="absolute -top-5 justify-self-center self-center max-w-sm text-center  mb-4 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-red-900">
+            {/* <p className="text-sm font-semibold">Login error</p> */}
+            <p className="mt-1 text-sm">
+              {error === "Invalid credentials" ? "Invalid phone number or password" : error}
+            </p>
+          </div>
+        )}
         <div className="text-center">
           <div className="mx-auto h-12 w-12 bg-primary/10 text-primary flex items-center justify-center rounded-full mb-4">
             <Store className="h-6 w-6" />

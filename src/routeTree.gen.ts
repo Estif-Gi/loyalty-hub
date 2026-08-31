@@ -9,19 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TablesRouteImport } from './routes/tables'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as QrCodesRouteImport } from './routes/qr-codes'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MenuRouteImport } from './routes/menu'
 import { Route as LoyaltyRouteImport } from './routes/loyalty'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as EmployeesRouteImport } from './routes/employees'
-import { Route as EmployeeSetupRouteImport } from './routes/employee-setup'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as BillingRouteImport } from './routes/billing'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TablesRoute = TablesRouteImport.update({
+  id: '/tables',
+  path: '/tables',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -30,6 +36,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const QrCodesRoute = QrCodesRouteImport.update({
   id: '/qr-codes',
   path: '/qr-codes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -55,11 +66,6 @@ const LoginRoute = LoginRouteImport.update({
 const EmployeesRoute = EmployeesRouteImport.update({
   id: '/employees',
   path: '/employees',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EmployeeSetupRoute = EmployeeSetupRouteImport.update({
-  id: '/employee-setup',
-  path: '/employee-setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -88,28 +94,30 @@ export interface FileRoutesByFullPath {
   '/billing': typeof BillingRoute
   '/customers': typeof CustomersRoute
   '/dashboard': typeof DashboardRoute
-  '/employee-setup': typeof EmployeeSetupRoute
   '/employees': typeof EmployeesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
   '/menu': typeof MenuRoute
   '/notifications': typeof NotificationsRoute
+  '/orders': typeof OrdersRoute
   '/qr-codes': typeof QrCodesRoute
   '/register': typeof RegisterRoute
+  '/tables': typeof TablesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/billing': typeof BillingRoute
   '/customers': typeof CustomersRoute
   '/dashboard': typeof DashboardRoute
-  '/employee-setup': typeof EmployeeSetupRoute
   '/employees': typeof EmployeesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
   '/menu': typeof MenuRoute
   '/notifications': typeof NotificationsRoute
+  '/orders': typeof OrdersRoute
   '/qr-codes': typeof QrCodesRoute
   '/register': typeof RegisterRoute
+  '/tables': typeof TablesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,14 +125,15 @@ export interface FileRoutesById {
   '/billing': typeof BillingRoute
   '/customers': typeof CustomersRoute
   '/dashboard': typeof DashboardRoute
-  '/employee-setup': typeof EmployeeSetupRoute
   '/employees': typeof EmployeesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
   '/menu': typeof MenuRoute
   '/notifications': typeof NotificationsRoute
+  '/orders': typeof OrdersRoute
   '/qr-codes': typeof QrCodesRoute
   '/register': typeof RegisterRoute
+  '/tables': typeof TablesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -133,42 +142,45 @@ export interface FileRouteTypes {
     | '/billing'
     | '/customers'
     | '/dashboard'
-    | '/employee-setup'
     | '/employees'
     | '/login'
     | '/loyalty'
     | '/menu'
     | '/notifications'
+    | '/orders'
     | '/qr-codes'
     | '/register'
+    | '/tables'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/billing'
     | '/customers'
     | '/dashboard'
-    | '/employee-setup'
     | '/employees'
     | '/login'
     | '/loyalty'
     | '/menu'
     | '/notifications'
+    | '/orders'
     | '/qr-codes'
     | '/register'
+    | '/tables'
   id:
     | '__root__'
     | '/'
     | '/billing'
     | '/customers'
     | '/dashboard'
-    | '/employee-setup'
     | '/employees'
     | '/login'
     | '/loyalty'
     | '/menu'
     | '/notifications'
+    | '/orders'
     | '/qr-codes'
     | '/register'
+    | '/tables'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -176,18 +188,26 @@ export interface RootRouteChildren {
   BillingRoute: typeof BillingRoute
   CustomersRoute: typeof CustomersRoute
   DashboardRoute: typeof DashboardRoute
-  EmployeeSetupRoute: typeof EmployeeSetupRoute
   EmployeesRoute: typeof EmployeesRoute
   LoginRoute: typeof LoginRoute
   LoyaltyRoute: typeof LoyaltyRoute
   MenuRoute: typeof MenuRoute
   NotificationsRoute: typeof NotificationsRoute
+  OrdersRoute: typeof OrdersRoute
   QrCodesRoute: typeof QrCodesRoute
   RegisterRoute: typeof RegisterRoute
+  TablesRoute: typeof TablesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tables': {
+      id: '/tables'
+      path: '/tables'
+      fullPath: '/tables'
+      preLoaderRoute: typeof TablesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -200,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/qr-codes'
       fullPath: '/qr-codes'
       preLoaderRoute: typeof QrCodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -235,13 +262,6 @@ declare module '@tanstack/react-router' {
       path: '/employees'
       fullPath: '/employees'
       preLoaderRoute: typeof EmployeesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/employee-setup': {
-      id: '/employee-setup'
-      path: '/employee-setup'
-      fullPath: '/employee-setup'
-      preLoaderRoute: typeof EmployeeSetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -280,14 +300,15 @@ const rootRouteChildren: RootRouteChildren = {
   BillingRoute: BillingRoute,
   CustomersRoute: CustomersRoute,
   DashboardRoute: DashboardRoute,
-  EmployeeSetupRoute: EmployeeSetupRoute,
   EmployeesRoute: EmployeesRoute,
   LoginRoute: LoginRoute,
   LoyaltyRoute: LoyaltyRoute,
   MenuRoute: MenuRoute,
   NotificationsRoute: NotificationsRoute,
+  OrdersRoute: OrdersRoute,
   QrCodesRoute: QrCodesRoute,
   RegisterRoute: RegisterRoute,
+  TablesRoute: TablesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

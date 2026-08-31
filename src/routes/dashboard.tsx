@@ -7,7 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
+import { requireOwner } from "@/lib/auth";
+
 export const Route = createFileRoute("/dashboard")({
+  beforeLoad: requireOwner,
   head: () => ({
     meta: [
       { title: "Dashboard · Ember & Oak Loyalty" },

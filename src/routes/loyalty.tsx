@@ -7,7 +7,10 @@ import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
+import { requireOwner } from "@/lib/auth";
+
 export const Route = createFileRoute("/loyalty")({
+  beforeLoad: requireOwner,
   head: () => ({ meta: [{ title: "Loyalty Program · Ember & Oak" }] }),
   component: LoyaltyPage,
 });

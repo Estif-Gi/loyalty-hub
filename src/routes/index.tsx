@@ -1,5 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Flame, ArrowRight, Star, Shield, Zap, Check, Users, BarChart3, Bell, TrendingUp, Clock, Gift } from "lucide-react";
+import {
+  Flame,
+  ArrowRight,
+  Star,
+  Shield,
+  Zap,
+  Check,
+  Users,
+  BarChart3,
+  Bell,
+  TrendingUp,
+  Clock,
+  Gift,
+} from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useEffect, useRef, useState } from "react";
 
@@ -7,7 +20,18 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-function Waves({ lineColor = "#d97706", waveSpeedX = 0.0125, waveSpeedY = 0.01, waveAmpX = 40, waveAmpY = 20, friction = 0.9, tension = 0.01, maxCursorMove = 120, xGap = 12, yGap = 36 }) {
+function Waves({
+  lineColor = "#d97706",
+  waveSpeedX = 0.0125,
+  waveSpeedY = 0.01,
+  waveAmpX = 40,
+  waveAmpY = 20,
+  friction = 0.9,
+  tension = 0.01,
+  maxCursorMove = 120,
+  xGap = 12,
+  yGap = 36,
+}) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const mouse = useRef({ x: -999, y: -999, vx: 0, vy: 0 });
   const frame = useRef(0);
@@ -19,19 +43,25 @@ function Waves({ lineColor = "#d97706", waveSpeedX = 0.0125, waveSpeedY = 0.01, 
     if (!ctx) return;
     let W: number, H: number, cols: number, rows: number, points: any[];
     const resize = () => {
-      W = canvas.offsetWidth; H = canvas.offsetHeight;
-      canvas.width = W; canvas.height = H;
-      cols = Math.ceil(W / xGap) + 2; rows = Math.ceil(H / yGap) + 2;
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width = W;
+      canvas.height = H;
+      cols = Math.ceil(W / xGap) + 2;
+      rows = Math.ceil(H / yGap) + 2;
       points = [];
-      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++)
-        points.push({ ox: c * xGap, oy: r * yGap, x: c * xGap, y: r * yGap, vx: 0, vy: 0 });
+      for (let r = 0; r < rows; r++)
+        for (let c = 0; c < cols; c++)
+          points.push({ ox: c * xGap, oy: r * yGap, x: c * xGap, y: r * yGap, vx: 0, vy: 0 });
     };
     const onMove = (e: any) => {
       const rect = canvas.getBoundingClientRect();
       const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
       const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-      mouse.current.vx = cx - mouse.current.x; mouse.current.vy = cy - mouse.current.y;
-      mouse.current.x = cx; mouse.current.y = cy;
+      mouse.current.vx = cx - mouse.current.x;
+      mouse.current.vy = cy - mouse.current.y;
+      mouse.current.x = cx;
+      mouse.current.y = cy;
     };
     window.addEventListener("mousemove", onMove);
     window.addEventListener("touchmove", onMove, { passive: true });
@@ -41,23 +71,34 @@ function Waves({ lineColor = "#d97706", waveSpeedX = 0.0125, waveSpeedY = 0.01, 
       frame.current++;
       ctx.clearRect(0, 0, W, H);
       for (let i = 0; i < points.length; i++) {
-        const p = points[i]; const r2 = Math.floor(i / cols); const c2 = i % cols;
+        const p = points[i];
+        const r2 = Math.floor(i / cols);
+        const c2 = i % cols;
         const tx = p.ox + Math.sin(frame.current * waveSpeedX + c2 * 0.3 + r2 * 0.1) * waveAmpX;
         const ty = p.oy + Math.cos(frame.current * waveSpeedY + r2 * 0.3 + c2 * 0.1) * waveAmpY;
-        const dx = mouse.current.x - p.ox; const dy = mouse.current.y - p.oy;
+        const dx = mouse.current.x - p.ox;
+        const dy = mouse.current.y - p.oy;
         const dist = Math.sqrt(dx * dx + dy * dy);
         const inf = Math.max(0, 1 - dist / maxCursorMove);
         p.vx += (tx - p.x) * tension + mouse.current.vx * inf * 0.4;
         p.vy += (ty - p.y) * tension + mouse.current.vy * inf * 0.4;
-        p.vx *= friction; p.vy *= friction; p.x += p.vx; p.y += p.vy;
+        p.vx *= friction;
+        p.vy *= friction;
+        p.x += p.vx;
+        p.y += p.vy;
       }
-      ctx.strokeStyle = lineColor; ctx.lineWidth = 0.6; ctx.globalAlpha = 0.4;
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = 0.6;
+      ctx.globalAlpha = 0.4;
       for (let r2 = 0; r2 < rows; r2++) {
         ctx.beginPath();
         for (let c2 = 0; c2 < cols; c2++) {
           const p = points[r2 * cols + c2];
           if (c2 === 0) ctx.moveTo(p.x, p.y);
-          else { const prev = points[r2 * cols + c2 - 1]; ctx.quadraticCurveTo(prev.x, prev.y, (prev.x + p.x) / 2, (prev.y + p.y) / 2); }
+          else {
+            const prev = points[r2 * cols + c2 - 1];
+            ctx.quadraticCurveTo(prev.x, prev.y, (prev.x + p.x) / 2, (prev.y + p.y) / 2);
+          }
         }
         ctx.stroke();
       }
@@ -66,7 +107,10 @@ function Waves({ lineColor = "#d97706", waveSpeedX = 0.0125, waveSpeedY = 0.01, 
         for (let r2 = 0; r2 < rows; r2++) {
           const p = points[r2 * cols + c2];
           if (r2 === 0) ctx.moveTo(p.x, p.y);
-          else { const prev = points[(r2 - 1) * cols + c2]; ctx.quadraticCurveTo(prev.x, prev.y, (prev.x + p.x) / 2, (prev.y + p.y) / 2); }
+          else {
+            const prev = points[(r2 - 1) * cols + c2];
+            ctx.quadraticCurveTo(prev.x, prev.y, (prev.x + p.x) / 2, (prev.y + p.y) / 2);
+          }
         }
         ctx.stroke();
       }
@@ -74,17 +118,33 @@ function Waves({ lineColor = "#d97706", waveSpeedX = 0.0125, waveSpeedY = 0.01, 
       animRef.current = requestAnimationFrame(draw);
     };
     draw();
-    return () => { if (animRef.current !== null) cancelAnimationFrame(animRef.current); window.removeEventListener("mousemove", onMove); window.removeEventListener("touchmove", onMove); window.removeEventListener("resize", resize); };
+    return () => {
+      if (animRef.current !== null) cancelAnimationFrame(animRef.current);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("resize", resize);
+    };
   }, []);
-  return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }}
+    />
+  );
 }
 
 function Ticker() {
-  const items = ["☕ +340 stamps today at Brûlée Bistro","🎉 Roots Kitchen hit 1,000 loyal customers","📈 The Daily Grind saw 38% more repeat visits","💌 Oak & Grain sent a promo — 94% open rate","⭐ Café Noir launched their 3rd loyalty plan"];
+  const items = [
+    "☕ +340 stamps today at Brûlée Bistro",
+    "🎉 Roots Kitchen hit 1,000 loyal customers",
+    "📈 The Daily Grind saw 38% more repeat visits",
+    "💌 Oak & Grain sent a promo — 94% open rate",
+    "⭐ Café Noir launched their 3rd loyalty plan",
+  ];
   const doubled = [...items, ...items];
   return (
     <>
-    {/* <div style={{ background: "#d97706", overflow: "hidden", padding: "10px 0", borderBottom: "1px solid #b45309" }}>
+      {/* <div style={{ background: "#d97706", overflow: "hidden", padding: "10px 0", borderBottom: "1px solid #b45309" }}>
       <div style={{ display: "flex", gap: 60, animation: "ticker 28s linear infinite", whiteSpace: "nowrap", width: "max-content" }}>
         {doubled.map((t, i) => <span key={i} style={{ fontSize: 13, fontWeight: 600, color: "white", letterSpacing: ".02em" }}>{t}</span>)}
       </div> 
@@ -93,46 +153,164 @@ function Ticker() {
   );
 }
 
-function AnimatedCounter({ to, suffix = "", duration = 1800 }: { to: number; suffix?: string; duration?: number }) {
+function AnimatedCounter({
+  to,
+  suffix = "",
+  duration = 1800,
+}: {
+  to: number;
+  suffix?: string;
+  duration?: number;
+}) {
   const [val, setVal] = useState(0);
   const ref = useRef<HTMLSpanElement | null>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const el = ref.current; if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.5 });
-    obs.observe(el); return () => obs.disconnect();
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
   useEffect(() => {
     if (!visible) return;
     let start: number | null = null;
-    const step = (ts: number) => { if (!start) start = ts; const p = Math.min((ts - start) / duration, 1); setVal(Math.round((1 - Math.pow(1 - p, 3)) * to)); if (p < 1) requestAnimationFrame(step); };
+    const step = (ts: number) => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / duration, 1);
+      setVal(Math.round((1 - Math.pow(1 - p, 3)) * to));
+      if (p < 1) requestAnimationFrame(step);
+    };
     requestAnimationFrame(step);
   }, [visible, to, duration]);
-  return <span ref={ref}>{val.toLocaleString()}{suffix}</span>;
+  return (
+    <span ref={ref}>
+      {val.toLocaleString()}
+      {suffix}
+    </span>
+  );
 }
 
 function useReveal(threshold = 0.12) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
-    const el = ref.current; if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold });
-    obs.observe(el); return () => obs.disconnect();
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, [threshold]);
   return [ref, visible] as const;
 }
 
 const plans = [
-  { id: "free", name: "Free", price: "ETB 0", badge: null, cta: "Start free — no card needed", featured: false, features: ["2 staff accounts","200 customer profiles","30 menu items","1 loyalty program","7-day analytics"] },
-  { id: "loyal", name: "Loyal", price: "ETB 990", badge: "Most popular", cta: "Start growing", featured: true, features: ["4 staff accounts","1,000 customers","100 menu items","1 loyalty program","4 push notifications/mo","30-day analytics"] },
-  { id: "trustworthy", name: "Trustworthy", price: "ETB 2,490", badge: null, cta: "Level up", featured: false, features: ["6 staff accounts","5,000 customers","300 menu items","1 loyalty program","8 targeted campaigns/mo","90-day analytics"] },
-  { id: "faithful", name: "Faithful", price: "ETB 4,990", badge: "Best value", cta: "Go all-in", featured: false, features: ["10 staff accounts","Unlimited customers","Unlimited menu items","2 loyalty program","12 bulk/targeted blasts","1-year analytics + export"] },
+  {
+    id: "free",
+    name: "Free",
+    price: "ETB 0",
+    badge: null,
+    cta: "Start free — no card needed",
+    featured: false,
+    features: [
+      "2 staff accounts",
+      "200 customer profiles",
+      "30 menu items",
+      "1 loyalty program",
+      "7-day analytics",
+    ],
+  },
+  {
+    id: "loyal",
+    name: "Loyal",
+    price: "ETB 990",
+    badge: "Most popular",
+    cta: "Start growing",
+    featured: true,
+    features: [
+      "4 staff accounts",
+      "1,000 customers",
+      "100 menu items",
+      "1 loyalty program",
+      "4 push notifications/mo",
+      "30-day analytics",
+    ],
+  },
+  {
+    id: "trustworthy",
+    name: "Trustworthy",
+    price: "ETB 2,490",
+    badge: null,
+    cta: "Level up",
+    featured: false,
+    features: [
+      "6 staff accounts",
+      "5,000 customers",
+      "300 menu items",
+      "1 loyalty program",
+      "8 targeted campaigns/mo",
+      "90-day analytics",
+    ],
+  },
+  {
+    id: "faithful",
+    name: "Faithful",
+    price: "ETB 4,990",
+    badge: "Best value",
+    cta: "Go all-in",
+    featured: false,
+    features: [
+      "10 staff accounts",
+      "Unlimited customers",
+      "Unlimited menu items",
+      "2 loyalty program",
+      "12 bulk/targeted blasts",
+      "1-year analytics + export",
+    ],
+  },
 ];
 
 const testimonials = [
-  { quote: "We used to run paper punch cards that customers lost. Now they check their stamps before they even order. Revenue from regulars is up 44%.", name: "Sofia Reyes", role: "Owner, Brûlée Bistro", initials: "SR", color: "#d97706" },
-  { quote: "I set up our loyalty program on a Tuesday afternoon. By Friday we had 80 sign-ups. I didn't write a single line of code.", name: "Marcus Oduya", role: "Founder, Roots Kitchen", initials: "MO", color: "#92400e" },
-  { quote: "The notification feature is a game-changer. I sent one 'Free slice Friday' blast and had a line out the door by noon.", name: "Anya Lim", role: "Owner, The Daily Grind", initials: "AL", color: "#b45309" },
+  {
+    quote:
+      "We used to run paper punch cards that customers lost. Now they check their stamps before they even order. Revenue from regulars is up 44%.",
+    name: "Sofia Reyes",
+    role: "Owner, Brûlée Bistro",
+    initials: "SR",
+    color: "#d97706",
+  },
+  {
+    quote:
+      "I set up our loyalty program on a Tuesday afternoon. By Friday we had 80 sign-ups. I didn't write a single line of code.",
+    name: "Marcus Oduya",
+    role: "Founder, Roots Kitchen",
+    initials: "MO",
+    color: "#92400e",
+  },
+  {
+    quote:
+      "The notification feature is a game-changer. I sent one 'Free slice Friday' blast and had a line out the door by noon.",
+    name: "Anya Lim",
+    role: "Owner, The Daily Grind",
+    initials: "AL",
+    color: "#b45309",
+  },
 ];
 
 function LandingPage() {
@@ -143,7 +321,15 @@ function LandingPage() {
   const [testRef, testVisible] = useReveal();
 
   return (
-    <div style={{ fontFamily: "'DM Sans','Nunito',sans-serif", background: "#faf7f2", color: "#2c1f0e", minHeight: "100vh", overflowX: "hidden" }}>
+    <div
+      style={{
+        fontFamily: "'DM Sans','Nunito',sans-serif",
+        background: "#faf7f2",
+        color: "#2c1f0e",
+        minHeight: "100vh",
+        overflowX: "hidden",
+      }}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;}
@@ -279,24 +465,38 @@ function LandingPage() {
       <nav className="nav">
         <div className="nav-inner">
           <a href="/" className="logo">
-            <div className="logo-icon"><Flame size={19} color="white" /></div>
+            <div className="logo-icon">
+              <Flame size={19} color="white" />
+            </div>
             <span className="logo-copy">
               <span className="logo-name">Loyal</span>
               <span className="logo-sub">Restaurant hub</span>
             </span>
           </a>
           <div className="nav-links" aria-label="Landing page sections">
-            <a href="#how" className="nav-link">How it works</a>
-            <a href="#features" className="nav-link">Features</a>
-            <a href="#pricing" className="nav-link">Pricing</a>
+            <a href="#how" className="nav-link">
+              How it works
+            </a>
+            <a href="#features" className="nav-link">
+              Features
+            </a>
+            <a href="#pricing" className="nav-link">
+              Pricing
+            </a>
           </div>
           <div className="nav-actions">
             {isAuthenticated ? (
-              <Link to="/dashboard" className="btn-nav">Dashboard <ArrowRight size={15} /></Link>
+              <Link to="/dashboard" className="btn-nav">
+                Dashboard <ArrowRight size={15} />
+              </Link>
             ) : (
               <>
-                <Link to="/login" className="btn-ghost">Log in</Link>
-                <Link to="/register" className="btn-nav">Get started free <ArrowRight size={15} /></Link>
+                <Link to="/login" className="btn-ghost">
+                  Log in
+                </Link>
+                <Link to="/register" className="btn-nav">
+                  Get started free <ArrowRight size={15} />
+                </Link>
               </>
             )}
           </div>
@@ -309,33 +509,57 @@ function LandingPage() {
         <div className="hero-glow" />
         <div className="hero-content">
           <div>
-            <div className="hero-tag a1"><Star size={11} />Built for restaurant owners</div>
+            <div className="hero-tag a1">
+              <Star size={11} />
+              Built for restaurant owners
+            </div>
             <h1 className="a2">
-              Your regulars are<br />
-              your <span className="accent">goldmine.</span><br />
+              Your regulars are
+              <br />
+              your <span className="accent">goldmine.</span>
+              <br />
               Start mining.
             </h1>
             <p className="hero-sub a3">
-              Paper punch cards get lost. Discounts eat your margin. Loyal gives your guests a reason to come back — and you the data to make sure they do.
+              Paper punch cards get lost. Discounts eat your margin. Loyal gives your guests a
+              reason to come back — and you the data to make sure they do.
             </p>
             <div className="hero-cta a4">
               {isAuthenticated ? (
-                <Link to="/dashboard" className="btn-hero">Go to Dashboard <ArrowRight size={17} /></Link>
+                <Link to="/dashboard" className="btn-hero">
+                  Go to Dashboard <ArrowRight size={17} />
+                </Link>
               ) : (
                 <>
-                  <Link to="/register" className="btn-hero">Start free — no credit card <ArrowRight size={17} /></Link>
-                  <Link to="/login" className="btn-hero-ghost">See a demo</Link>
+                  <Link to="/register" className="btn-hero">
+                    Start free — no credit card <ArrowRight size={17} />
+                  </Link>
+                  <Link to="/login" className="btn-hero-ghost">
+                    See a demo
+                  </Link>
                 </>
               )}
             </div>
             <div className="trust-row a5">
               <div className="trust-avatars">
-                {[["SR","#d97706"],["MO","#92400e"],["AL","#b45309"],["JK","#78350f"]].map(([init,bg],i) => (
-                  <div key={i} className="trust-avatar" style={{ background: bg, marginLeft: i > 0 ? -8 : 0, zIndex: 4 - i }}>{init}</div>
+                {[
+                  ["SR", "#d97706"],
+                  ["MO", "#92400e"],
+                  ["AL", "#b45309"],
+                  ["JK", "#78350f"],
+                ].map(([init, bg], i) => (
+                  <div
+                    key={i}
+                    className="trust-avatar"
+                    style={{ background: bg, marginLeft: i > 0 ? -8 : 0, zIndex: 4 - i }}
+                  >
+                    {init}
+                  </div>
                 ))}
               </div>
               <p style={{ fontSize: 14, color: "rgba(250,247,242,.5)" }}>
-                <strong style={{ color: "#fbbf24" }}>500+ restaurant owners</strong> grew repeat visits with Loyal
+                <strong style={{ color: "#fbbf24" }}>500+ restaurant owners</strong> grew repeat
+                visits with Loyal
               </p>
             </div>
           </div>
@@ -345,12 +569,36 @@ function LandingPage() {
                 <div className="dot" style={{ background: "#ef4444" }} />
                 <div className="dot" style={{ background: "#f59e0b" }} />
                 <div className="dot" style={{ background: "#22c55e" }} />
-                <span style={{ marginLeft: 10, fontSize: 11, color: "rgba(250,247,242,.35)", fontWeight: 500 }}>Ember & Oak — Loyal Dashboard</span>
+                <span
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 11,
+                    color: "rgba(250,247,242,.35)",
+                    fontWeight: 500,
+                  }}
+                >
+                  Ember & Oak — Loyal Dashboard
+                </span>
               </div>
               <div className="mock-body">
-                <div style={{ fontSize: 10, color: "rgba(250,247,242,.35)", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".07em", marginBottom: 10 }}>This month</div>
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: "rgba(250,247,242,.35)",
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                    letterSpacing: ".07em",
+                    marginBottom: 10,
+                  }}
+                >
+                  This month
+                </div>
                 <div className="mock-stats">
-                  {[["Regulars","1,284","↑ 12%"],["Stamps","4,891","↑ 8%"],["Redeem","342","↑ 5%"]].map(([l,v,c]) => (
+                  {[
+                    ["Regulars", "1,284", "↑ 12%"],
+                    ["Stamps", "4,891", "↑ 8%"],
+                    ["Redeem", "342", "↑ 5%"],
+                  ].map(([l, v, c]) => (
                     <div key={l} className="mock-stat">
                       <div className="mock-sl">{l}</div>
                       <div className="mock-sv">{v}</div>
@@ -359,39 +607,73 @@ function LandingPage() {
                   ))}
                 </div>
                 <div className="mock-chart">
-                  {[38,55,42,70,52,82,61,88,68,78,57,92].map((h,i) => (
-                    <div key={i} className={`cbar${i>=9?" m":""}`} style={{ height: `${h}%`, animationDelay: `${.45+i*.05}s` }} />
+                  {[38, 55, 42, 70, 52, 82, 61, 88, 68, 78, 57, 92].map((h, i) => (
+                    <div
+                      key={i}
+                      className={`cbar${i >= 9 ? " m" : ""}`}
+                      style={{ height: `${h}%`, animationDelay: `${0.45 + i * 0.05}s` }}
+                    />
                   ))}
                 </div>
                 <div className="stamp-card">
-                  <div style={{ fontSize: 12, fontWeight: 700, opacity: .75, marginBottom: 6 }}>☕ House Blend Card — Wanjiru M.</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, opacity: 0.75, marginBottom: 6 }}>
+                    ☕ House Blend Card — Wanjiru M.
+                  </div>
                   <div className="sdots">
-                    {Array.from({ length: 10 }).map((_,i) => (
-                      <div key={i} className={`sdot${i<7?" f":""}`}>{i<7?"✓":""}</div>
+                    {Array.from({ length: 10 }).map((_, i) => (
+                      <div key={i} className={`sdot${i < 7 ? " f" : ""}`}>
+                        {i < 7 ? "✓" : ""}
+                      </div>
                     ))}
                   </div>
-                  <div style={{ marginTop: 9, fontSize: 11, opacity: .6 }}>3 more coffees → free flat white 🎁</div>
+                  <div style={{ marginTop: 9, fontSize: 11, opacity: 0.6 }}>
+                    3 more coffees → free flat white 🎁
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div style={{ position: "relative", zIndex: 2 }}><Ticker /></div>
+        <div style={{ position: "relative", zIndex: 2 }}>
+          <Ticker />
+        </div>
       </section>
 
       {/* PAIN → GAIN */}
       <section className="pain-section">
         <div className="pain-grid">
           <div>
-            <div className="sec-label" style={{ textAlign: "left" }}>Sound familiar?</div>
+            <div className="sec-label" style={{ textAlign: "left" }}>
+              Sound familiar?
+            </div>
             <div style={{ marginTop: 32 }}>
               {[
-                { icon: <Clock size={20} />, bg: "#fef2f2", color: "#dc2626", title: "Paper cards that disappear", desc: "Customers lose them, staff forget to stamp, and you have zero data on who's actually coming back." },
-                { icon: <TrendingUp size={20} />, bg: "#fffbeb", color: "#d97706", title: "Discounts that kill your margins", desc: "Flat deals bring in the wrong crowd and train customers to wait for coupons instead of paying full price." },
-                { icon: <Bell size={20} />, bg: "#f0fdf4", color: "#16a34a", title: "No way to reach your guests", desc: "You have no idea who your best customers are, and no channel to bring them back on a slow Tuesday." },
+                {
+                  icon: <Clock size={20} />,
+                  bg: "#fef2f2",
+                  color: "#dc2626",
+                  title: "Paper cards that disappear",
+                  desc: "Customers lose them, staff forget to stamp, and you have zero data on who's actually coming back.",
+                },
+                {
+                  icon: <TrendingUp size={20} />,
+                  bg: "#fffbeb",
+                  color: "#d97706",
+                  title: "Discounts that kill your margins",
+                  desc: "Flat deals bring in the wrong crowd and train customers to wait for coupons instead of paying full price.",
+                },
+                {
+                  icon: <Bell size={20} />,
+                  bg: "#f0fdf4",
+                  color: "#16a34a",
+                  title: "No way to reach your guests",
+                  desc: "You have no idea who your best customers are, and no channel to bring them back on a slow Tuesday.",
+                },
               ].map((p) => (
                 <div key={p.title} className="pain-item">
-                  <div className="pain-icon" style={{ background: p.bg, color: p.color }}>{p.icon}</div>
+                  <div className="pain-icon" style={{ background: p.bg, color: p.color }}>
+                    {p.icon}
+                  </div>
                   <div>
                     <div className="pain-title">{p.title}</div>
                     <div className="pain-desc">{p.desc}</div>
@@ -402,16 +684,36 @@ function LandingPage() {
           </div>
           <div>
             <div className="big-quote">
-              "The average restaurant loses <em>68%</em> of its customers not from bad food — but from indifference."
+              "The average restaurant loses <em>68%</em> of its customers not from bad food — but
+              from indifference."
             </div>
             <p style={{ marginTop: 24, fontSize: 16, color: "var(--b500)", lineHeight: 1.7 }}>
-              Loyal turns that statistic on its head. Digital stamp cards guests actually use. Push notifications they actually read. Analytics that show you exactly who to win back — and how.
+              Loyal turns that statistic on its head. Digital stamp cards guests actually use. Push
+              notifications they actually read. Analytics that show you exactly who to win back —
+              and how.
             </p>
             <div style={{ marginTop: 32, display: "flex", gap: 32, flexWrap: "wrap" }}>
-              {[["44%","avg. return rate lift"],["8 min","to launch your first card"],["3.2×","ROI in the first month"]].map(([n,l]) => (
+              {[
+                ["44%", "avg. return rate lift"],
+                ["8 min", "to launch your first card"],
+                ["3.2×", "ROI in the first month"],
+              ].map(([n, l]) => (
                 <div key={l}>
-                  <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 32, fontWeight: 800, color: "var(--amber)" }}>{n}</div>
-                  <div style={{ fontSize: 13, color: "var(--b500)", fontWeight: 500, marginTop: 2 }}>{l}</div>
+                  <div
+                    style={{
+                      fontFamily: "'Playfair Display',serif",
+                      fontSize: 32,
+                      fontWeight: 800,
+                      color: "var(--amber)",
+                    }}
+                  >
+                    {n}
+                  </div>
+                  <div
+                    style={{ fontSize: 13, color: "var(--b500)", fontWeight: 500, marginTop: 2 }}
+                  >
+                    {l}
+                  </div>
                 </div>
               ))}
             </div>
@@ -425,9 +727,24 @@ function LandingPage() {
         <div className="sec-title">From sign-up to regulars in 3 steps</div>
         <div className="steps-grid">
           {[
-            { n: "1", title: "Design your stamp card", desc: "Pick a template, add your branding and reward. Looks stunning on every phone. Takes about 8 minutes.", delay: "d1" },
-            { n: "2", title: "Guests scan & collect", desc: "Customers scan a QR code at checkout. No app download needed. Stamps live right in their browser.", delay: "d2" },
-            { n: "3", title: "Watch them come back", desc: "Send a message when someone's close to a reward. See who visits most. Keep your tables full.", delay: "d3" },
+            {
+              n: "1",
+              title: "Design your stamp card",
+              desc: "Pick a template, add your branding and reward. Looks stunning on every phone. Takes about 8 minutes.",
+              delay: "d1",
+            },
+            {
+              n: "2",
+              title: "Guests scan & collect",
+              desc: "Customers scan a QR code at checkout. No app download needed. Stamps live right in their browser.",
+              delay: "d2",
+            },
+            {
+              n: "3",
+              title: "Watch them come back",
+              desc: "Send a message when someone's close to a reward. See who visits most. Keep your tables full.",
+              delay: "d3",
+            },
           ].map((s) => (
             <div key={s.n} className={`step-card reveal ${s.delay} ${howVisible ? "show" : ""}`}>
               <div className="step-num">{s.n}</div>
@@ -444,14 +761,47 @@ function LandingPage() {
         <div className="sec-title">Everything a busy owner needs</div>
         <div className="feat-grid">
           {[
-            { icon: <Gift size={21} />, title: "Digital stamp cards", desc: "Beautiful, branded loyalty cards guests love to fill. No paper, no printing, no lost cards.", delay: "d1" },
-            { icon: <Bell size={21} />, title: "Push notifications", desc: "Bring guests back with targeted nudges — \"You're 1 stamp away!\" or \"Free dessert this weekend\".", delay: "d2" },
-            { icon: <BarChart3 size={21} />, title: "Visit analytics", desc: "See who visits most, when foot traffic peaks, and which rewards drive the most repeat visits.", delay: "d3" },
-            { icon: <Users size={21} />, title: "Staff management", desc: "Add your team, assign stamp permissions, and track activity — without sharing your login.", delay: "d4" },
-            { icon: <Shield size={21} />, title: "Fraud prevention", desc: "Smart stamp verification stops friends stamping friends. Every stamp is tied to a real visit.", delay: "d5" },
-            { icon: <Zap size={21} />, title: "Instant setup", desc: "Go live today. No hardware, no developer, no long contracts. Cancel any time.", delay: "d6" },
+            {
+              icon: <Gift size={21} />,
+              title: "Digital stamp cards",
+              desc: "Beautiful, branded loyalty cards guests love to fill. No paper, no printing, no lost cards.",
+              delay: "d1",
+            },
+            {
+              icon: <Bell size={21} />,
+              title: "Push notifications",
+              desc: 'Bring guests back with targeted nudges — "You\'re 1 stamp away!" or "Free dessert this weekend".',
+              delay: "d2",
+            },
+            {
+              icon: <BarChart3 size={21} />,
+              title: "Visit analytics",
+              desc: "See who visits most, when foot traffic peaks, and which rewards drive the most repeat visits.",
+              delay: "d3",
+            },
+            {
+              icon: <Users size={21} />,
+              title: "Staff management",
+              desc: "Add your team, assign stamp permissions, and track activity — without sharing your login.",
+              delay: "d4",
+            },
+            {
+              icon: <Shield size={21} />,
+              title: "Fraud prevention",
+              desc: "Smart stamp verification stops friends stamping friends. Every stamp is tied to a real visit.",
+              delay: "d5",
+            },
+            {
+              icon: <Zap size={21} />,
+              title: "Instant setup",
+              desc: "Go live today. No hardware, no developer, no long contracts. Cancel any time.",
+              delay: "d6",
+            },
           ].map((f) => (
-            <div key={f.title} className={`feat-card reveal ${f.delay} ${featVisible ? "show" : ""}`}>
+            <div
+              key={f.title}
+              className={`feat-card reveal ${f.delay} ${featVisible ? "show" : ""}`}
+            >
               <div className="feat-icon">{f.icon}</div>
               <div className="feat-title">{f.title}</div>
               <div className="feat-desc">{f.desc}</div>
@@ -462,14 +812,18 @@ function LandingPage() {
 
       {/* TESTIMONIALS */}
       <section className="test-section" ref={testRef}>
-        <div className="sec-label" style={{ color: "#fbbf24" }}>Real owners. Real results.</div>
+        <div className="sec-label" style={{ color: "#fbbf24" }}>
+          Real owners. Real results.
+        </div>
         <div className="sec-title-light">Don't take our word for it</div>
         <div className="test-grid">
           {testimonials.map((t, i) => (
-            <div key={t.name} className={`test-card reveal d${i+1} ${testVisible ? "show" : ""}`}>
+            <div key={t.name} className={`test-card reveal d${i + 1} ${testVisible ? "show" : ""}`}>
               <div className="test-quote">"{t.quote}"</div>
               <div className="test-author">
-                <div className="test-avatar" style={{ background: t.color }}>{t.initials}</div>
+                <div className="test-avatar" style={{ background: t.color }}>
+                  {t.initials}
+                </div>
                 <div>
                   <div className="test-name">{t.name}</div>
                   <div className="test-role">{t.role}</div>
@@ -490,7 +844,9 @@ function LandingPage() {
             { to: 98, suffix: "%", label: "Owner satisfaction" },
           ].map((s) => (
             <div key={s.label}>
-              <div className="stat-num"><AnimatedCounter to={s.to} suffix={s.suffix} /></div>
+              <div className="stat-num">
+                <AnimatedCounter to={s.to} suffix={s.suffix} />
+              </div>
               <div className="stat-label">{s.label}</div>
             </div>
           ))}
@@ -503,7 +859,10 @@ function LandingPage() {
         <div className="sec-title">Start free. Scale when it pays off.</div>
         <div className="pricing-grid">
           {plans.map((plan, i) => (
-            <div key={plan.name} className={`pricing-card reveal d${i+1} ${priceVisible ? "show" : ""}${plan.featured ? " featured" : ""}`}>
+            <div
+              key={plan.name}
+              className={`pricing-card reveal d${i + 1} ${priceVisible ? "show" : ""}${plan.featured ? " featured" : ""}`}
+            >
               {plan.badge && <div className="plan-badge">{plan.badge}</div>}
               <div className="plan-name">{plan.name}</div>
               <div className="plan-price">{plan.price}</div>
@@ -543,38 +902,75 @@ function LandingPage() {
       <section className="cta-banner">
         <div className="cta-glow" />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 50, fontWeight: 800, color: "#faf7f2", lineHeight: 1.1, marginBottom: 20, maxWidth: 680, margin: "0 auto 20px" }}>
+          <div
+            style={{
+              fontFamily: "'Playfair Display',serif",
+              fontSize: 50,
+              fontWeight: 800,
+              color: "#faf7f2",
+              lineHeight: 1.1,
+              marginBottom: 20,
+              maxWidth: 680,
+              margin: "0 auto 20px",
+            }}
+          >
             Your next regular walks in tomorrow. Will they come back?
           </div>
-          <p style={{ fontSize: 18, color: "rgba(250,247,242,.5)", marginBottom: 36, maxWidth: 480, margin: "0 auto 36px" }}>
+          <p
+            style={{
+              fontSize: 18,
+              color: "rgba(250,247,242,.5)",
+              marginBottom: 36,
+              maxWidth: 480,
+              margin: "0 auto 36px",
+            }}
+          >
             Set up your first stamp card today — free, forever. No developer needed.
           </p>
           <div style={{ display: "flex", justifyContent: "center", gap: 14, flexWrap: "wrap" }}>
             {isAuthenticated ? (
-              <Link to="/dashboard" className="btn-hero">Go to Dashboard <ArrowRight size={17} /></Link>
+              <Link to="/dashboard" className="btn-hero">
+                Go to Dashboard <ArrowRight size={17} />
+              </Link>
             ) : (
               <>
-                <Link to="/register" className="btn-hero">Start free today <ArrowRight size={17} /></Link>
-                <Link to="/login" className="btn-hero-ghost">Log in</Link>
+                <Link to="/register" className="btn-hero">
+                  Start free today <ArrowRight size={17} />
+                </Link>
+                <Link to="/login" className="btn-hero-ghost">
+                  Log in
+                </Link>
               </>
             )}
           </div>
-          <p style={{ marginTop: 20, fontSize: 13, color: "rgba(250,247,242,.3)" }}>Free plan, always. No credit card required.</p>
+          <p style={{ marginTop: 20, fontSize: 13, color: "rgba(250,247,242,.3)" }}>
+            Free plan, always. No credit card required.
+          </p>
         </div>
       </section>
 
       {/* FOOTER */}
       <footer className="footer">
         <div className="footer-logo">
-          <div className="logo-icon" style={{ width: 32, height: 32 }}><Flame size={15} color="white" /></div>
-         Loyal
+          <div className="logo-icon" style={{ width: 32, height: 32 }}>
+            <Flame size={15} color="white" />
+          </div>
+          Loyal
         </div>
         <div style={{ display: "flex", gap: 24 }}>
-          <a href="#" className="footer-link">Privacy</a>
-          <a href="#" className="footer-link">Terms</a>
-          <a href="#" className="footer-link">Contact</a>
+          <a href="#" className="footer-link">
+            Privacy
+          </a>
+          <a href="#" className="footer-link">
+            Terms
+          </a>
+          <a href="#" className="footer-link">
+            Contact
+          </a>
         </div>
-        <span style={{ fontSize: 13, color: "var(--b600)" }}>© 2026 Ember & Oak. All rights reserved.</span>
+        <span style={{ fontSize: 13, color: "var(--b600)" }}>
+          © 2026 Ember & Oak. All rights reserved.
+        </span>
       </footer>
     </div>
   );

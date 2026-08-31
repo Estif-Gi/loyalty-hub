@@ -1,4 +1,11 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts, useNavigate } from "@tanstack/react-router";
+import {
+  Outlet,
+  Link,
+  createRootRoute,
+  HeadContent,
+  Scripts,
+  useNavigate,
+} from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "../lib/auth";
 import { useAuthStore } from "../store/auth.store";
@@ -87,55 +94,39 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function SubscriptionLimitModal() {
-  const {
-    isLimitModalOpen,
-    limitModalMessage,
-    setLimitModalOpen,
-    restaurantId,
-    updateBillingStatus,
-  } = useAuthStore();
-  const [selectedPlan, setSelectedPlan] = useState<string>("loyal");
-  const [isUpdating, setIsUpdating] = useState(false);
+  const { isLimitModalOpen, limitModalMessage, setLimitModalOpen } = useAuthStore();
   const navigate = useNavigate();
 
   if (!isLimitModalOpen) return null;
 
-  const handleUpgrade = async () => {
-    if (!restaurantId) {
-      toast.error("Restaurant ID not found. Please log in again.");
-      return;
-    }
-    try {
-      setIsUpdating(true);
-      await updateBillingStatus(restaurantId, selectedPlan);
-      toast.success(`Successfully upgraded to the ${selectedPlan} plan!`);
-      setLimitModalOpen(false);
-      window.location.reload();
-    } catch (err: any) {
-      toast.error(err.message || "Failed to upgrade subscription. Please try again.");
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
   const plans = [
     { id: "loyal", name: "Loyal", price: "990", desc: "4 staff, 1,000 customers, 100 menu items" },
-    { id: "trustworthy", name: "Trustworthy", price: "2,490", desc: "6 staff, 5,000 customers, 300 menu items" },
-    { id: "faithful", name: "Faithful", price: "4,990", desc: "10 staff, Unlimited customers, Unlimited menu items" }
+    {
+      id: "trustworthy",
+      name: "Trustworthy",
+      price: "2,490",
+      desc: "6 staff, 5,000 customers, 300 menu items",
+    },
+    {
+      id: "faithful",
+      name: "Faithful",
+      price: "4,990",
+      desc: "10 staff, Unlimited customers, Unlimited menu items",
+    },
   ];
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
-      <div 
-        className="absolute inset-0 bg-background/80 backdrop-blur-md transition-opacity" 
+      <div
+        className="absolute inset-0 bg-background/80 backdrop-blur-md transition-opacity"
         onClick={() => setLimitModalOpen(false)}
       />
 
       <div className="relative w-full max-w-lg overflow-hidden rounded-3xl bg-card border border-border shadow-2xl transition-all z-10">
         <div className="h-2 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700" />
-        
-        <button 
-          onClick={() => setLimitModalOpen(false)} 
+
+        <button
+          onClick={() => setLimitModalOpen(false)}
           className="absolute right-4 top-4 p-2 rounded-full hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-colors"
         >
           <X className="h-4 w-4" />
@@ -147,34 +138,28 @@ function SubscriptionLimitModal() {
               <Sparkles className="h-6 w-6 animate-pulse" />
             </div>
             <div>
-              <h3 className="font-display text-2xl font-bold text-foreground">Upgrade Plan</h3>
-              <p className="text-sm text-muted-foreground">You've hit a limit on your current plan</p>
+              <h3 className="font-display text-2xl font-bold text-foreground">Limit Reached</h3>
+              <p className="text-sm text-muted-foreground">
+                You've hit a limit on your current plan
+              </p>
             </div>
           </div>
 
           <div className="bg-secondary/40 border border-border/50 rounded-2xl p-4 mb-6 text-sm text-foreground/95">
-            {limitModalMessage || "You have reached the limits of your current subscription. Please update your billing status to continue using all features."}
+            {limitModalMessage ||
+              "You have reached the limits of your current subscription. Please contact support to upgrade your plan."}
           </div>
 
-          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Choose upgrade</h4>
+          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+            Available Tiers
+          </h4>
           <div className="space-y-3 mb-6">
             {plans.map((p) => (
-              <button
+              <div
                 key={p.id}
-                type="button"
-                onClick={() => setSelectedPlan(p.id)}
-                className={`w-full text-left flex items-center justify-between p-4 rounded-2xl border transition-all ${
-                  selectedPlan === p.id 
-                    ? "border-primary bg-primary/5 shadow-sm" 
-                    : "border-border hover:border-muted-foreground/30 hover:bg-secondary/20"
-                }`}
+                className="w-full flex items-center justify-between p-4 rounded-2xl border border-border bg-secondary/10"
               >
                 <div className="flex items-start gap-3">
-                  <div className={`mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
-                    selectedPlan === p.id ? "border-primary bg-primary text-primary-foreground" : "border-muted-foreground/30"
-                  }`}>
-                    {selectedPlan === p.id && <Check className="h-2.5 w-2.5 stroke-[3]" />}
-                  </div>
                   <div>
                     <div className="font-semibold text-foreground flex items-center gap-1.5">
                       {p.name}
@@ -191,11 +176,17 @@ function SubscriptionLimitModal() {
                   <div className="font-display font-bold text-foreground">ETB {p.price}</div>
                   <div className="text-[10px] text-muted-foreground">/ month</div>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-6 text-xs text-amber-800 dark:text-amber-400">
+            <strong>Plan Upgrades:</strong> To upgrade or change your subscription tier, please
+            contact support at <strong>support@loyaltyhub.com</strong> or call your account
+            representative.
+          </div>
+
+          <div className="flex gap-3">
             <button
               onClick={() => {
                 setLimitModalOpen(false);
@@ -203,20 +194,13 @@ function SubscriptionLimitModal() {
               }}
               className="flex-1 py-3 px-4 border border-border rounded-xl font-semibold hover:bg-secondary transition-all text-center flex items-center justify-center gap-2"
             >
-              <CreditCard className="h-4 w-4" /> Manage Billing
+              <CreditCard className="h-4 w-4" /> View Billing Tiers
             </button>
             <button
-              onClick={handleUpgrade}
-              disabled={isUpdating}
-              className="flex-[1.5] bg-primary text-primary-foreground py-3 px-4 rounded-xl font-bold hover:bg-primary/95 transition-all flex items-center justify-center gap-2 shadow-warm active:scale-[0.98] disabled:opacity-50"
+              onClick={() => setLimitModalOpen(false)}
+              className="flex-1 bg-primary text-primary-foreground py-3 px-4 rounded-xl font-bold hover:bg-primary/95 transition-all text-center"
             >
-              {isUpdating ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Upgrading...
-                </>
-              ) : (
-                <>Upgrade Now</>
-              )}
+              Acknowledge
             </button>
           </div>
         </div>
@@ -231,7 +215,7 @@ function RootComponent() {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("/sw.js").then(
           (reg) => console.log("ServiceWorker registration successful with scope: ", reg.scope),
-          (err) => console.error("ServiceWorker registration failed: ", err)
+          (err) => console.error("ServiceWorker registration failed: ", err),
         );
       });
     }
