@@ -68,10 +68,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 import { redirect } from "@tanstack/react-router";
 
 export function requireOwner() {
-  const { isAuthenticated, user } = useAuthStore.getState();
-  if (!isAuthenticated || user?.role !== "owner") {
-    throw redirect({ to: "/login" });
+  // Skip redirect on server-side rendering (SSR) since localStorage is client-only.
+  // The client router will perform the validation once it loads and hydrates.
+  if (typeof window === "undefined") {
+    return;
   }
+
+  const { isAuthenticated, user } = useAuthStore.getState();
+
+  // If memory state confirms we are owner, allow immediately
+  if (isAuthenticated && user?.role === "owner") {
+    return;
+  }
+
+  // Fallback: Check localStorage directly to prevent race conditions during refresh/hydration
+  try {
+    const stored = localStorage.getItem("auth-storage");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed?.state?.isAuthenticated && parsed?.state?.user?.role === "owner") {
+        return;
+      }
+    }
+  } catch (e) {
+    console.error("Error reading auth-storage during requireOwner fallback:", e);
+  }
+
+  throw redirect({ to: "/login" });
 }
 
 export function useAuth() {
