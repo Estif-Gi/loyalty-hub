@@ -457,17 +457,20 @@ function LandingPage() {
         .sec-title{font-family:'Playfair Display',serif;font-size:42px;font-weight:800;text-align:center;color:var(--b900);margin-bottom:56px;line-height:1.15;}
         .sec-title-light{font-family:'Playfair Display',serif;font-size:42px;font-weight:800;text-align:center;color:#faf7f2;margin-bottom:56px;line-height:1.15;}
         @media(max-width:900px){.nav-links{display:none;}.nav-inner{height:60px;border-radius:16px;}.logo-sub{display:none;}.btn-ghost{display:none;}.btn-nav{min-height:40px;padding:0 14px;font-size:13px;}.nav{top:10px;padding:0 14px;}}
-        @media(max-width:768px){.hero-content{grid-template-columns:1fr;padding:100px 24px 60px;gap:36px;}.hero h1{font-size:40px;}.mock-anim{display:none;}.feat-grid,.steps-grid,.pricing-grid,.test-grid{grid-template-columns:1fr;}.stats-grid{grid-template-columns:1fr 1fr;}.pain-grid{grid-template-columns:1fr;}}
-        @media(max-width:420px){.logo-name{font-size:19px;}.logo-icon{width:36px;height:36px;border-radius:12px;}.btn-nav{padding:0 12px;}.btn-nav svg{display:none;}}
+        @media(max-width:768px){.hero-content{grid-template-columns:1fr;padding:110px 20px 60px;gap:32px;}.hero h1{font-size:36px;}.mock-anim{display:block;max-width:440px;margin:0 auto;width:100%;}.feat-grid,.steps-grid,.pricing-grid,.test-grid{grid-template-columns:1fr;}.stats-grid{grid-template-columns:1fr 1fr;}.pain-grid{grid-template-columns:1fr;}}
+        @media(max-width:420px){.logo-name{font-size:18px;}.logo-icon{width:36px;height:36px;border-radius:10px;}.btn-nav{padding:0 12px;}.btn-nav svg{display:none;}}
       `}</style>
 
       {/* NAV */}
       <nav className="nav">
         <div className="nav-inner">
           <a href="/" className="logo">
-            <div className="logo-icon">
-              <Flame size={19} color="white" />
-            </div>
+            <img
+              src="/premium.png"
+              alt="Loyal Logo"
+              className="logo-icon"
+              style={{ width: 40, height: 40, borderRadius: 12, objectFit: "cover", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" }}
+            />
             <span className="logo-copy">
               <span className="logo-name">Loyal</span>
               <span className="logo-sub">Restaurant hub</span>
@@ -509,8 +512,12 @@ function LandingPage() {
         <div className="hero-glow" />
         <div className="hero-content">
           <div>
-            <div className="hero-tag a1">
-              <Star size={11} />
+            <div className="hero-tag a1" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <img
+                src="/premium.png"
+                alt="Loyal Logo"
+                style={{ width: 16, height: 16, borderRadius: 4, objectFit: "cover" }}
+              />
               Built for restaurant owners
             </div>
             <h1 className="a2">
@@ -573,14 +580,54 @@ function LandingPage() {
                   style={{
                     marginLeft: 10,
                     fontSize: 11,
-                    color: "rgba(250,247,242,.35)",
-                    fontWeight: 500,
+                    color: "rgba(250,247,242,.65)",
+                    fontWeight: 600,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
                   }}
                 >
-                  Ember & Oak — Loyal Dashboard
+                  <img
+                    src="/premium.png"
+                    alt="Loyal"
+                    style={{ width: 14, height: 14, borderRadius: 3, objectFit: "cover" }}
+                  />
+                  Loyal — Restaurant Operations Hub
                 </span>
               </div>
               <div className="mock-body">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "10px 14px",
+                    background: "rgba(255,255,255,0.06)",
+                    borderRadius: 14,
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    marginBottom: 16,
+                  }}
+                >
+                  <img
+                    src="/premium.png"
+                    alt="Loyal App Icon"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: 10,
+                      objectFit: "cover",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.35)",
+                    }}
+                  />
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "#faf7f2" }}>
+                      Loyal Hub App
+                    </div>
+                    <div style={{ fontSize: 10, color: "rgba(250,247,242,0.6)" }}>
+                      Installable PWA for Phones & Tablets
+                    </div>
+                  </div>
+                </div>
                 <div
                   style={{
                     fontSize: 10,
@@ -951,10 +998,12 @@ function LandingPage() {
 
       {/* FOOTER */}
       <footer className="footer">
-        <div className="footer-logo">
-          <div className="logo-icon" style={{ width: 32, height: 32 }}>
-            <Flame size={15} color="white" />
-          </div>
+        <div className="footer-logo" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <img
+            src="/premium.png"
+            alt="Loyal Logo"
+            style={{ width: 32, height: 32, borderRadius: 10, objectFit: "cover", boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}
+          />
           Loyal
         </div>
         <div style={{ display: "flex", gap: 24 }}>

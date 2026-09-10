@@ -63,13 +63,17 @@ export function DashboardSidebar() {
   return (
     <aside className="hidden lg:flex w-64 shrink-0 flex-col bg-sidebar  text-sidebar-foreground border-r border-sidebar-border shadow-sm">
       {/* Brand Header */}
-      <div className="px-2 pl-3 py-4 flex items-center gap-6 border-b  border-sidebar-border">
-        <img src="/L(1).webp" alt="Loyalty Hub Logo" className="h-15 w-15 " />
+      <div className="px-4 py-4 flex items-center gap-3.5 border-b border-sidebar-border">
+        <img
+          src="/premium.png"
+          alt="Loyal Logo"
+          className="h-10 w-10 rounded-xl shadow-sm object-cover"
+        />
 
-        <div className="">
-          <p className="font-display text-lg leading-none">Loyal</p>
-          <p className="text-[10px] text-sidebar-foreground/60 mt-1 uppercase font-semibold tracking-wider">
-            Restaurant hub
+        <div>
+          <p className="font-display font-bold text-lg leading-tight">Loyal</p>
+          <p className="text-[10px] text-sidebar-foreground/60 uppercase font-semibold tracking-wider">
+            Restaurant Hub
           </p>
         </div>
       </div>

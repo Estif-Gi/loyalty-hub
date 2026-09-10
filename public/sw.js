@@ -1,5 +1,5 @@
-const CACHE_NAME = "loyal-hub-v1";
-const ASSETS_TO_CACHE = ["/", "/manifest.json"];
+const CACHE_NAME = "loyal-hub-v2";
+const ASSETS_TO_CACHE = ["/", "/manifest.json", "/premium.png"];
 
 // Install Event
 self.addEventListener("install", (e) => {

@@ -63,12 +63,17 @@ export const Route = createRootRoute({
         href: appCss,
       },
       {
-        rel: "manifest",
-        href: "/manifest.json",
+        rel: "icon",
+        href: "/premium.png",
+        type: "image/png",
       },
       {
         rel: "apple-touch-icon",
-        href: "/icon-192.png",
+        href: "/premium.png",
+      },
+      {
+        rel: "manifest",
+        href: "/manifest.json",
       },
     ],
   }),

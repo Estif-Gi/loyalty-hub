@@ -11,6 +11,9 @@ export interface OrderPricing {
   subtotal: number;
   tax: number;
   total: number;
+  currency?: string;
+  discount?: number;
+  serviceCharge?: number;
 }
 
 export interface OrderCustomer {

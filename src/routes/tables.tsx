@@ -462,22 +462,22 @@ function Tables() {
       title="Tables"
       subtitle="Manage your physical tables, assign waiters, and monitor status."
       actions={
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <button
             onClick={() => setIsBulkOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-semibold hover:bg-secondary transition-colors cursor-pointer"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-background px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-semibold hover:bg-secondary transition-colors cursor-pointer"
           >
             <Users className="h-4 w-4" /> Bulk Assignment
           </button>
           <button
             onClick={() => setIsBulkCreateOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-semibold hover:bg-secondary transition-colors cursor-pointer"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-xl border border-border bg-background px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-semibold hover:bg-secondary transition-colors cursor-pointer"
           >
             <Plus className="h-4 w-4" /> Bulk Create
           </button>
           <button
             onClick={() => setIsCreateOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-primary text-primary-foreground px-4 py-2.5 text-sm font-bold hover:bg-primary/95 shadow-warm active:scale-[0.98] transition-colors cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary text-primary-foreground px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-bold hover:bg-primary/95 shadow-warm active:scale-[0.98] transition-colors cursor-pointer"
           >
             <Plus className="h-4 w-4" /> Add Table
           </button>
@@ -489,12 +489,12 @@ function Tables() {
           <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       ) : tables.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center bg-card border border-border rounded-3xl p-8">
+        <div className="flex flex-col items-center justify-center py-20 text-center bg-card border border-border rounded-3xl p-6 sm:p-8">
           <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
             <Users className="h-8 w-8" />
           </div>
           <h3 className="text-xl font-bold text-foreground">No tables created yet</h3>
-          <p className="text-muted-foreground mt-1.5 max-w-sm">
+          <p className="text-muted-foreground mt-1.5 max-w-sm text-xs sm:text-sm">
             Create physical restaurant tables so customers can scan codes and place geofenced
             orders.
           </p>
@@ -506,14 +506,106 @@ function Tables() {
           </button>
         </div>
       ) : (
-        <div className="bg-card border border-border rounded-2xl shadow-soft p-6">
-          <div className="overflow-x-auto">
+        <div className="bg-card border border-border rounded-2xl shadow-soft p-4 sm:p-6">
+          {/* Mobile Card View (< md) */}
+          <div className="md:hidden space-y-3.5">
+            {tables.map((table) => {
+              const hasWaiter = !!table.assignedWaiter;
+
+              return (
+                <div
+                  key={table.id}
+                  className="p-4 rounded-xl border border-border bg-background/50 space-y-3 shadow-xs"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-lg">
+                        {table.code}
+                      </span>
+                      <span className="font-semibold text-sm text-foreground">{table.name}</span>
+                    </div>
+
+                    <button
+                      onClick={() => handleToggleActive(table)}
+                      className="inline-flex items-center cursor-pointer"
+                    >
+                      {table.isActive ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-success/15 text-success">
+                          Active
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-muted text-muted-foreground">
+                          Inactive
+                        </span>
+                      )}
+                    </button>
+                  </div>
+
+                  {table.description && (
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {table.description}
+                    </p>
+                  )}
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] uppercase font-bold text-muted-foreground block">
+                      Assigned Waiter
+                    </label>
+                    <select
+                      value={table.assignedWaiter?.id || ""}
+                      onChange={(e) => handleWaiterChange(table, e.target.value)}
+                      className="w-full bg-background border border-border rounded-lg p-2 text-xs text-foreground focus:ring-1 focus:ring-primary/20 focus:outline-none capitalize font-medium"
+                    >
+                      <option value="">Unassigned</option>
+                      {activeWaiters.map((w) => (
+                        <option key={w._id} value={w._id}>
+                          {w.name}
+                        </option>
+                      ))}
+                    </select>
+                    {!hasWaiter && (
+                      <span className="flex items-center gap-1 text-[10px] text-amber-600 font-semibold mt-1">
+                        <AlertCircle className="h-3 w-3 shrink-0" />
+                        Customer ordering blocked until waiter assigned.
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2 border-t border-border/50">
+                    <button
+                      onClick={() => {
+                        setOneTimeQrUrl(null);
+                        setSelectedTableQr(table);
+                      }}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-2.5 border border-border hover:bg-secondary rounded-lg text-xs font-semibold text-foreground transition-colors cursor-pointer"
+                    >
+                      <QrCode className="h-3.5 w-3.5 text-primary" /> QR Code
+                    </button>
+                    <button
+                      onClick={() => handleEditOpen(table)}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-2.5 border border-border hover:bg-secondary rounded-lg text-xs font-semibold text-foreground transition-colors cursor-pointer"
+                    >
+                      <Edit2 className="h-3.5 w-3.5" /> Edit
+                    </button>
+                    <button
+                      onClick={() => handleToggleActive(table)}
+                      className="py-2 px-3 border border-border hover:bg-secondary rounded-lg text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                    >
+                      {table.isActive ? "Deactivate" : "Activate"}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop Table View (>= md) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-border text-muted-foreground text-xs uppercase font-semibold">
                   <th className="pb-3">Code</th>
                   <th className="pb-3">Name</th>
-                  {/* <th className="pb-3 text-center">QR Code</th> */}
                   <th className="pb-3">Description</th>
                   <th className="pb-3">Assigned Waiter</th>
                   <th className="pb-3 text-center">Status</th>
@@ -528,41 +620,6 @@ function Tables() {
                     <tr key={table.id} className="hover:bg-secondary/10 transition-colors">
                       <td className="py-4 font-mono font-bold text-foreground">{table.code}</td>
                       <td className="py-4 font-medium text-foreground">{table.name}</td>
-                      {/* <td className="py-4">
-                        <div className="flex flex-col items-center justify-center gap-1.5">
-                          {table.hasActiveQr ? (
-                            <>
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-success/15 text-success">
-                                Active
-                              </span>
-                              <button
-                                onClick={() => {
-                                  setOneTimeQrUrl(null);
-                                  setSelectedTableQr(table);
-                                }}
-                                className="inline-flex items-center gap-1 px-2 py-1 border border-border hover:bg-secondary rounded-lg text-[10px] font-bold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                              >
-                                View QR
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary text-muted-foreground">
-                                Not Generated
-                              </span>
-                              <button
-                                onClick={() => {
-                                  setOneTimeQrUrl(null);
-                                  setSelectedTableQr(table);
-                                }}
-                                className="inline-flex items-center gap-1 px-2 py-1 border border-dashed border-border hover:bg-secondary rounded-lg text-[10px] font-bold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                              >
-                                <Plus className="h-2.5 w-2.5" /> Generate QR
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td> */}
                       <td className="py-4 text-muted-foreground max-w-xs truncate">
                         {table.description || <span className="text-muted-foreground/30">—</span>}
                       </td>
@@ -648,7 +705,7 @@ function Tables() {
 
       {/* Create Table Dialog */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="max-w-md rounded-2xl p-6 bg-card border border-border shadow-warm">
+        <DialogContent className="max-w-md w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-2xl p-4 sm:p-6 bg-card border border-border shadow-warm">
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-left">
               Add Restaurant Table
@@ -715,7 +772,7 @@ function Tables() {
 
       {/* Edit Table Dialog */}
       <Dialog open={isEditOpen} onOpenChange={(o) => !o && setIsEditOpen(false)}>
-        <DialogContent className="max-w-md rounded-2xl p-6 bg-card border border-border shadow-warm">
+        <DialogContent className="max-w-md w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-2xl p-4 sm:p-6 bg-card border border-border shadow-warm">
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-left">Edit Table Details</DialogTitle>
             <DialogDescription className="text-left text-xs">
@@ -777,7 +834,7 @@ function Tables() {
 
       {/* Bulk Waiter Assignment Dialog */}
       <Dialog open={isBulkOpen} onOpenChange={setIsBulkOpen}>
-        <DialogContent className="max-w-md rounded-2xl p-6 bg-card border border-border shadow-warm">
+        <DialogContent className="max-w-md w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-2xl p-4 sm:p-6 bg-card border border-border shadow-warm">
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-left">
               Bulk Waiter Assignment
@@ -880,7 +937,7 @@ function Tables() {
           }
         }}
       >
-        <DialogContent className="max-w-md rounded-2xl p-6 bg-card border border-border shadow-warm">
+        <DialogContent className="max-w-md w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-2xl p-4 sm:p-6 bg-card border border-border shadow-warm">
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-left">
               QR Code Manager — {selectedTableQr?.name} ({selectedTableQr?.code})
@@ -1017,7 +1074,7 @@ function Tables() {
 
       {/* Bulk Create Tables Generator Dialog */}
       <Dialog open={isBulkCreateOpen} onOpenChange={setIsBulkCreateOpen}>
-        <DialogContent className="max-w-md rounded-2xl p-6 bg-card border border-border shadow-warm">
+        <DialogContent className="max-w-md w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-2xl p-4 sm:p-6 bg-card border border-border shadow-warm">
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-left">
               Bulk Create Tables
