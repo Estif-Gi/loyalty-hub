@@ -95,15 +95,23 @@ function Register() {
                 Administrative Contact:
               </span>
               <p>
-                Email:{" "}
+                Phone:{" "}
                 <a
-                  href="mailto:support@loyaltyhub.com"
+                  href="tel:+251919444499"
                   className="text-primary hover:underline font-medium"
                 >
-                  support@loyaltyhub.com
+                  +251-91-944-4499
                 </a>
               </p>
-              <p>Phone: +123 456 789 000</p>
+              <p>
+                Email:{" "}
+                <a
+                  href="mailto:info@gebetatech.com"
+                  className="text-primary hover:underline font-medium"
+                >
+                  info@gebetatech.com
+                </a>
+              </p>
             </div>
 
             <div className="h-px bg-border/50" />
