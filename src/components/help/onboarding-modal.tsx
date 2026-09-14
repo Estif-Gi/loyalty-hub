@@ -175,20 +175,20 @@ export function OnboardingModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && closeModal()}>
-      <DialogContent className="sm:max-w-2xl max-w-[95vw] p-0 overflow-hidden border-border bg-card rounded-3xl shadow-2xl">
+      <DialogContent className="w-[94vw] sm:max-w-2xl max-h-[88dvh] sm:max-h-[86vh] p-0 flex flex-col overflow-hidden border-border bg-card rounded-2xl sm:rounded-3xl shadow-2xl">
         {/* Top Gradient Header */}
-        <div className="bg-gradient-to-r from-amber-500/20 via-primary/20 to-purple-500/20 p-6 border-b border-border/60">
+        <div className="bg-gradient-to-r from-amber-500/20 via-primary/20 to-purple-500/20 p-3.5 sm:p-5 border-b border-border/60 shrink-0 pr-10 sm:pr-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-primary text-primary-foreground shadow-sm">
-                <Sparkles className="h-5 w-5 animate-pulse" />
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <div className="p-1.5 sm:p-2 rounded-xl bg-primary text-primary-foreground shadow-sm shrink-0">
+                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 animate-pulse" />
               </div>
               <div>
-                <DialogTitle className="font-display text-xl sm:text-2xl font-bold text-foreground">
+                <DialogTitle className="font-display text-base sm:text-xl font-bold text-foreground leading-tight">
                   System Setup Guide
                 </DialogTitle>
-                <DialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                  Follow this sequence to configure menu, staff, tables, location, and loyalty
+                <DialogDescription className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-1 sm:line-clamp-none">
+                  Follow this sequence to configure your restaurant
                 </DialogDescription>
               </div>
             </div>
@@ -218,8 +218,8 @@ export function OnboardingModal() {
             </div>
           </div>
 
-          {/* Step Sequence Pills (clickable) */}
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2 mt-4">
+          {/* Step Sequence Pills - Horizontal swipeable on mobile, grid on desktop */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 mt-2.5 sm:grid sm:grid-cols-6 sm:gap-2">
             {ONBOARDING_STEPS.map((s, idx) => {
               const isCurrent = currentStep === idx;
               const isDone = currentStep > idx;
@@ -230,7 +230,7 @@ export function OnboardingModal() {
                     setViewMode("step");
                     setStep(idx);
                   }}
-                  className={`flex flex-col items-center justify-center p-2 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+                  className={`flex items-center sm:flex-col sm:justify-center gap-1 px-2.5 py-1.5 sm:p-2 rounded-xl text-xs font-medium transition-all shrink-0 cursor-pointer ${
                     isCurrent
                       ? "bg-primary text-primary-foreground font-bold shadow-sm ring-2 ring-primary/40"
                       : isDone
@@ -238,7 +238,7 @@ export function OnboardingModal() {
                         : "bg-secondary/70 text-muted-foreground hover:bg-secondary"
                   }`}
                 >
-                  <span className="text-[10px] uppercase tracking-wider font-semibold">
+                  <span className="text-[10px] uppercase tracking-wider font-bold whitespace-nowrap">
                     Step {s.step}
                   </span>
                   <span className="hidden sm:inline text-xs truncate max-w-full">
@@ -250,46 +250,46 @@ export function OnboardingModal() {
           </div>
         </div>
 
-        {/* Content Body */}
+        {/* Content Body - Vertically scrollable on phone screens */}
         {viewMode === "step" ? (
-          <div className="p-6 sm:p-7 space-y-6">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5 sm:space-y-5 overscroll-contain">
             {/* Step Header */}
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-3 sm:gap-4">
               <div
-                className={`p-3.5 rounded-2xl ${current.bgLight} ${current.color} shrink-0 border ${current.borderColor}`}
+                className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl ${current.bgLight} ${current.color} shrink-0 border ${current.borderColor}`}
               >
-                <StepIcon className="h-7 w-7" />
+                <StepIcon className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-secondary text-secondary-foreground">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider bg-secondary text-secondary-foreground">
                     {current.badge}
                   </span>
                 </div>
-                <h3 className="font-display text-xl sm:text-2xl font-bold text-foreground mt-1">
+                <h3 className="font-display text-base sm:text-xl font-bold text-foreground mt-0.5 sm:mt-1 leading-snug">
                   {current.title}
                 </h3>
-                <p className="text-xs sm:text-sm font-medium text-muted-foreground mt-0.5">
+                <p className="text-xs sm:text-sm font-medium text-muted-foreground mt-0.5 leading-snug">
                   {current.subtitle}
                 </p>
               </div>
             </div>
 
             {/* Description Card */}
-            <div className="p-4 rounded-2xl bg-secondary/30 border border-border/60 text-sm text-foreground/90 leading-relaxed">
+            <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-secondary/30 border border-border/60 text-xs sm:text-sm text-foreground/90 leading-relaxed">
               {current.description}
             </div>
 
             {/* Key Action Checkpoints */}
-            <div className="space-y-2.5">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <div className="space-y-2">
+              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 Key Action Points:
               </p>
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 {current.details.map((detail, idx) => (
-                  <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm">
-                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span className="text-foreground/85">{detail}</span>
+                  <div key={idx} className="flex items-start gap-2 text-xs sm:text-sm">
+                    <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground/85 leading-snug">{detail}</span>
                   </div>
                 ))}
               </div>
@@ -297,13 +297,13 @@ export function OnboardingModal() {
 
             {/* Direct Link Action */}
             {current.to && (
-              <div className="pt-2">
+              <div className="pt-1">
                 <Link
                   to={current.to}
                   onClick={() => {
                     handleFinish();
                   }}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-primary/10 text-primary hover:bg-primary/20 border border-primary/25 transition-all"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-primary/10 text-primary hover:bg-primary/20 border border-primary/25 transition-all"
                 >
                   <span>{current.actionText}</span>
                   <ExternalLink className="h-3.5 w-3.5" />
@@ -313,50 +313,50 @@ export function OnboardingModal() {
           </div>
         ) : (
           /* Full Checklist View */
-          <div className="p-6 space-y-3 max-h-[50vh] overflow-y-auto">
+          <div className="flex-1 p-4 sm:p-6 space-y-2.5 sm:space-y-3 overflow-y-auto overscroll-contain">
             {ONBOARDING_STEPS.map((stepItem, idx) => {
               const Icon = stepItem.icon;
               return (
                 <div
                   key={stepItem.step}
-                  className="p-4 rounded-2xl border border-border/70 hover:border-primary/40 bg-secondary/20 hover:bg-secondary/30 transition-all flex items-start gap-3.5 cursor-pointer"
+                  className="p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-border/70 hover:border-primary/40 bg-secondary/20 hover:bg-secondary/30 transition-all flex items-start gap-3 cursor-pointer"
                   onClick={() => {
                     setStep(idx);
                     setViewMode("step");
                   }}
                 >
                   <div
-                    className={`p-2.5 rounded-xl ${stepItem.bgLight} ${stepItem.color} shrink-0`}
+                    className={`p-2 sm:p-2.5 rounded-xl ${stepItem.bgLight} ${stepItem.color} shrink-0`}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
                       <span className="text-[10px] font-bold text-muted-foreground uppercase">
                         Step {stepItem.step}
                       </span>
-                      <h4 className="text-sm font-bold text-foreground truncate">
+                      <h4 className="text-xs sm:text-sm font-bold text-foreground truncate">
                         {stepItem.title.replace(/^(First|Then|Finally):\s*/i, "")}
                       </h4>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                    <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 line-clamp-2">
                       {stepItem.subtitle}
                     </p>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 mt-2" />
+                  <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
                 </div>
               );
             })}
           </div>
         )}
 
-        {/* Footer Navigation Controls */}
-        <div className="p-4 sm:p-5 bg-secondary/40 border-t border-border/60 flex items-center justify-between gap-3">
+        {/* Footer Navigation Controls - Pinned at bottom */}
+        <div className="p-3 sm:p-4 bg-secondary/40 border-t border-border/60 flex items-center justify-between gap-2 shrink-0">
           <Button
             variant="ghost"
             size="sm"
             onClick={closeModal}
-            className="text-xs text-muted-foreground hover:text-foreground"
+            className="text-xs text-muted-foreground hover:text-foreground h-8 sm:h-9 px-2.5 sm:px-3"
           >
             Close Guide
           </Button>
@@ -367,9 +367,9 @@ export function OnboardingModal() {
                 variant="outline"
                 size="sm"
                 onClick={prevStep}
-                className="text-xs flex items-center gap-1.5"
+                className="text-xs flex items-center gap-1 h-8 sm:h-9 px-2.5 sm:px-3"
               >
-                <ArrowLeft className="h-3.5 w-3.5" /> Back
+                <ArrowLeft className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Back
               </Button>
             )}
 
@@ -377,17 +377,17 @@ export function OnboardingModal() {
               <Button
                 size="sm"
                 onClick={nextStep}
-                className="text-xs font-semibold flex items-center gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
+                className="text-xs font-semibold flex items-center gap-1 bg-primary text-primary-foreground hover:bg-primary/90 h-8 sm:h-9 px-3 sm:px-4"
               >
-                Next Step <ArrowRight className="h-3.5 w-3.5" />
+                Next Step <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               </Button>
             ) : (
               <Button
                 size="sm"
                 onClick={handleFinish}
-                className="text-xs font-semibold flex items-center gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
+                className="text-xs font-semibold flex items-center gap-1 bg-primary text-primary-foreground hover:bg-primary/90 h-8 sm:h-9 px-3 sm:px-4"
               >
-                <CheckCircle2 className="h-4 w-4" /> Got It, Start Setup
+                <CheckCircle2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Start Setup
               </Button>
             )}
           </div>
