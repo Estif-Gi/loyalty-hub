@@ -5,7 +5,10 @@ import {
   GetOrderHistoryParams,
 } from "../api/orders.api";
 
-export function useEmployeeOrders(restaurantId: string | null, status: "active" | "history" = "active") {
+export function useEmployeeOrders(
+  restaurantId: string | null,
+  status: "active" | "history" = "active",
+) {
   return useQuery({
     queryKey: ["employee-orders", restaurantId, status],
     queryFn: () => getEmployeeOrders(restaurantId!, status),
@@ -16,7 +19,7 @@ export function useEmployeeOrders(restaurantId: string | null, status: "active" 
 
 export function useRestaurantOrderHistory(
   restaurantId: string | null,
-  params: GetOrderHistoryParams = {}
+  params: GetOrderHistoryParams = {},
 ) {
   return useQuery({
     queryKey: ["restaurant-order-history", restaurantId, params],

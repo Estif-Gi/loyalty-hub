@@ -96,10 +96,7 @@ function Register() {
               </span>
               <p>
                 Phone:{" "}
-                <a
-                  href="tel:+251919444499"
-                  className="text-primary hover:underline font-medium"
-                >
+                <a href="tel:+251919444499" className="text-primary hover:underline font-medium">
                   +251-91-944-4499
                 </a>
               </p>

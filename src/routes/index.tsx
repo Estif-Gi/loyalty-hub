@@ -469,7 +469,13 @@ function LandingPage() {
               src="/premium.png"
               alt="Loyal Logo"
               className="logo-icon"
-              style={{ width: 40, height: 40, borderRadius: 12, objectFit: "cover", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" }}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 12,
+                objectFit: "cover",
+                boxShadow: "0 4px 14px rgba(0,0,0,0.18)",
+              }}
             />
             <span className="logo-copy">
               <span className="logo-name">Loyal</span>
@@ -512,7 +518,10 @@ function LandingPage() {
         <div className="hero-glow" />
         <div className="hero-content">
           <div>
-            <div className="hero-tag a1" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <div
+              className="hero-tag a1"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
+            >
               <img
                 src="/premium.png"
                 alt="Loyal Logo"
@@ -1002,7 +1011,13 @@ function LandingPage() {
           <img
             src="/premium.png"
             alt="Loyal Logo"
-            style={{ width: 32, height: 32, borderRadius: 10, objectFit: "cover", boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 10,
+              objectFit: "cover",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+            }}
           />
           Loyal
         </div>

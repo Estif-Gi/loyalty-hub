@@ -440,14 +440,19 @@ function Employees() {
             <DialogDescription className="text-left text-sm text-foreground/90 leading-relaxed">
               Are you sure you want to delete <strong>{deleteTarget?.name}</strong>?
             </DialogDescription>
-            {deleteTarget?.role === "waiter" && deleteTarget?.assignedTableCount && deleteTarget?.assignedTableCount > 0 ? (
+            {deleteTarget?.role === "waiter" &&
+            deleteTarget?.assignedTableCount &&
+            deleteTarget?.assignedTableCount > 0 ? (
               <p className="text-left text-sm text-muted-foreground mt-2 leading-relaxed">
                 <strong>{deleteTarget?.name}</strong> is currently assigned to{" "}
-                <strong>{deleteTarget?.assignedTableCount} tables</strong>. Deleting this waiter will automatically clear their table assignments. Customers sitting at those tables will not be able to place orders until a new waiter is assigned.
+                <strong>{deleteTarget?.assignedTableCount} tables</strong>. Deleting this waiter
+                will automatically clear their table assignments. Customers sitting at those tables
+                will not be able to place orders until a new waiter is assigned.
               </p>
             ) : (
               <p className="text-left text-sm text-muted-foreground mt-2 leading-relaxed">
-                This will permanently delete this employee account. They will no longer be able to log in or access the order queue. This action cannot be undone.
+                This will permanently delete this employee account. They will no longer be able to
+                log in or access the order queue. This action cannot be undone.
               </p>
             )}
           </DialogHeader>

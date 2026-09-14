@@ -17,10 +17,7 @@ import {
   useBulkAssignTables,
   useBulkCreateTables,
 } from "@/features/tables/hooks/tables.queries";
-import {
-  useTableQrMetadata,
-  useGenerateTableQr,
-} from "@/features/qr-codes/hooks/qr-codes.queries";
+import { useTableQrMetadata, useGenerateTableQr } from "@/features/qr-codes/hooks/qr-codes.queries";
 import { RestaurantTable } from "@/features/tables/types/table.types";
 import {
   Dialog,
@@ -120,13 +117,11 @@ function Tables() {
     isLoading: isQrMetadataLoading,
     error: qrError,
     isError: isQrError,
-  } = useTableQrMetadata(
-    restaurantId,
-    selectedTableQr?.id || null,
-  );
+  } = useTableQrMetadata(restaurantId, selectedTableQr?.id || null);
 
   const activeQr = qrs.find((q) => q.isActive);
-  const isLegacyError = isQrError && (qrError as any)?.response?.data?.error === "QR_CREDENTIAL_NOT_RECOVERABLE";
+  const isLegacyError =
+    isQrError && (qrError as any)?.response?.data?.error === "QR_CREDENTIAL_NOT_RECOVERABLE";
 
   // Sync oneTimeQrUrl from sessionStorage if available
   useEffect(() => {
@@ -455,7 +450,6 @@ function Tables() {
     a.click();
     URL.revokeObjectURL(url);
   };
-
 
   return (
     <DashboardLayout
@@ -954,7 +948,9 @@ function Tables() {
           ) : isLegacyError ? (
             <div className="p-6 text-center border border-dashed border-destructive/20 rounded-2xl bg-destructive/5 space-y-2.5 mt-4">
               <AlertTriangle className="h-8 w-8 text-destructive mx-auto mb-2" />
-              <h4 className="font-semibold text-sm text-destructive">Legacy QR Code Unrecoverable</h4>
+              <h4 className="font-semibold text-sm text-destructive">
+                Legacy QR Code Unrecoverable
+              </h4>
               <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
                 This QR was created using the previous QR storage format and cannot be reprinted.
               </p>
@@ -962,100 +958,124 @@ function Tables() {
                 Contact your platform administrator to rotate or replace this QR code.
               </p>
             </div>
-          ) : (() => {
-            const qrUiState = resolveQrState(activeQr, oneTimeQrUrl, justRevoked);
-            return (
-              <div className="space-y-6 mt-4">
-                {/* QR Code preview block */}
-                {(qrUiState === "printable" || qrUiState === "metadata-only") && (
-                  <div className="flex flex-col items-center text-center p-4 bg-secondary/10 rounded-2xl border border-border/50">
-                    <div className="p-4 bg-white rounded-xl border border-border shadow-sm">
-                      <QRCodeSVG
-                        id="table-ordering-qr-preview"
-                        value={oneTimeQrUrl || activeQr?.url || (selectedTableQr ? sessionStorage.getItem(`qr_url_${selectedTableQr.id}`) : null) || ""}
-                        size={180}
-                        bgColor="#ffffff"
-                        fgColor="#2c1f0e"
-                        level="H"
-                      />
+          ) : (
+            (() => {
+              const qrUiState = resolveQrState(activeQr, oneTimeQrUrl, justRevoked);
+              return (
+                <div className="space-y-6 mt-4">
+                  {/* QR Code preview block */}
+                  {(qrUiState === "printable" || qrUiState === "metadata-only") && (
+                    <div className="flex flex-col items-center text-center p-4 bg-secondary/10 rounded-2xl border border-border/50">
+                      <div className="p-4 bg-white rounded-xl border border-border shadow-sm">
+                        <QRCodeSVG
+                          id="table-ordering-qr-preview"
+                          value={
+                            oneTimeQrUrl ||
+                            activeQr?.url ||
+                            (selectedTableQr
+                              ? sessionStorage.getItem(`qr_url_${selectedTableQr.id}`)
+                              : null) ||
+                            ""
+                          }
+                          size={180}
+                          bgColor="#ffffff"
+                          fgColor="#2c1f0e"
+                          level="H"
+                        />
+                      </div>
+
+                      {(oneTimeQrUrl ||
+                        activeQr?.url ||
+                        (selectedTableQr &&
+                          sessionStorage.getItem(`qr_url_${selectedTableQr.id}`))) && (
+                        <>
+                          <div className="mt-3 flex items-center gap-1.5 text-xs text-success font-semibold">
+                            <CheckCircle className="h-4 w-4" /> Secure Token Loaded Successfully
+                          </div>
+                          <div className="mt-3.5 text-center w-full px-2 max-w-xs">
+                            <p className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">
+                              Ordering Link
+                            </p>
+                            <a
+                              href={
+                                oneTimeQrUrl ||
+                                activeQr?.url ||
+                                (selectedTableQr
+                                  ? sessionStorage.getItem(`qr_url_${selectedTableQr.id}`)
+                                  : undefined) ||
+                                undefined
+                              }
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-primary hover:underline font-mono break-all inline-block mt-1 select-all cursor-pointer"
+                              title="Click to open link"
+                            >
+                              {oneTimeQrUrl ||
+                                activeQr?.url ||
+                                (selectedTableQr
+                                  ? sessionStorage.getItem(`qr_url_${selectedTableQr.id}`)
+                                  : null)}
+                            </a>
+                          </div>
+                        </>
+                      )}
+
+                      <div className="flex gap-2 mt-4 w-full">
+                        <button
+                          onClick={() => selectedTableQr && downloadTableQr(selectedTableQr.name)}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold hover:bg-secondary transition-colors cursor-pointer"
+                        >
+                          <Download className="h-3.5 w-3.5" /> Download SVG
+                        </button>
+                        <button
+                          onClick={() => selectedTableQr && printTableQR(selectedTableQr.name)}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-xs font-bold hover:bg-primary/95 transition-colors shadow-warm cursor-pointer"
+                        >
+                          <Printer className="h-3.5 w-3.5" /> Print QR Label
+                        </button>
+                      </div>
                     </div>
+                  )}
 
-                    {(oneTimeQrUrl || activeQr?.url || (selectedTableQr && sessionStorage.getItem(`qr_url_${selectedTableQr.id}`))) && (
-                      <>
-                        <div className="mt-3 flex items-center gap-1.5 text-xs text-success font-semibold">
-                          <CheckCircle className="h-4 w-4" /> Secure Token Loaded Successfully
-                        </div>
-                        <div className="mt-3.5 text-center w-full px-2 max-w-xs">
-                          <p className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">Ordering Link</p>
-                          <a
-                            href={oneTimeQrUrl || activeQr?.url || (selectedTableQr ? sessionStorage.getItem(`qr_url_${selectedTableQr.id}`) : undefined) || undefined}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-primary hover:underline font-mono break-all inline-block mt-1 select-all cursor-pointer"
-                            title="Click to open link"
-                          >
-                            {oneTimeQrUrl || activeQr?.url || (selectedTableQr ? sessionStorage.getItem(`qr_url_${selectedTableQr.id}`) : null)}
-                          </a>
-                        </div>
-                      </>
-                    )}
-
-                    <div className="flex gap-2 mt-4 w-full">
+                  {qrUiState === "revoked" && (
+                    <div className="p-6 text-center border border-dashed border-border rounded-2xl bg-destructive/10 space-y-2.5">
+                      <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-2" />
+                      <h4 className="font-semibold text-sm text-destructive">QR Code Revoked</h4>
+                      <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                        The table QR code has been successfully revoked. Guests can no longer check
+                        in using any previously printed QR codes for this table.
+                      </p>
                       <button
-                        onClick={() => selectedTableQr && downloadTableQr(selectedTableQr.name)}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold hover:bg-secondary transition-colors cursor-pointer"
+                        onClick={handleGenerateQr}
+                        disabled={generateMutation.isPending}
+                        className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-xl hover:bg-primary/95 transition-colors cursor-pointer"
                       >
-                        <Download className="h-3.5 w-3.5" /> Download SVG
-                      </button>
-                      <button
-                        onClick={() => selectedTableQr && printTableQR(selectedTableQr.name)}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-xs font-bold hover:bg-primary/95 transition-colors shadow-warm cursor-pointer"
-                      >
-                        <Printer className="h-3.5 w-3.5" /> Print QR Label
+                        {generateMutation.isPending ? "Generating..." : "Generate QR Code"}
                       </button>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {qrUiState === "revoked" && (
-                  <div className="p-6 text-center border border-dashed border-border rounded-2xl bg-destructive/10 space-y-2.5">
-                    <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-2" />
-                    <h4 className="font-semibold text-sm text-destructive">QR Code Revoked</h4>
-                    <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
-                      The table QR code has been successfully revoked. Guests can no longer check in using any previously printed QR codes for this table.
-                    </p>
-                    <button
-                      onClick={handleGenerateQr}
-                      disabled={generateMutation.isPending}
-                      className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-xl hover:bg-primary/95 transition-colors cursor-pointer"
-                    >
-                      {generateMutation.isPending ? "Generating..." : "Generate QR Code"}
-                    </button>
-                  </div>
-                )}
-
-                {qrUiState === "no-qr" && (
-                  <div className="p-6 text-center border border-dashed border-border rounded-2xl bg-secondary/15">
-                    <AlertTriangle className="h-8 w-8 text-amber-500 mx-auto mb-2" />
-                    <h4 className="font-semibold text-sm">No Active Ordering QR Code</h4>
-                    <p className="text-xs text-muted-foreground mt-1 max-w-xs mx-auto leading-relaxed">
-                      This table has no active ordering QR code. Customers cannot check in or place
-                      orders at this table.
-                    </p>
-                    <button
-                      onClick={handleGenerateQr}
-                      disabled={generateMutation.isPending}
-                      className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-xl hover:bg-primary/95 transition-colors cursor-pointer"
-                    >
-                      {generateMutation.isPending ? "Generating..." : "Generate QR Code"}
-                    </button>
-                  </div>
-                )}
-
-
-              </div>
-            );
-          })()}
+                  {qrUiState === "no-qr" && (
+                    <div className="p-6 text-center border border-dashed border-border rounded-2xl bg-secondary/15">
+                      <AlertTriangle className="h-8 w-8 text-amber-500 mx-auto mb-2" />
+                      <h4 className="font-semibold text-sm">No Active Ordering QR Code</h4>
+                      <p className="text-xs text-muted-foreground mt-1 max-w-xs mx-auto leading-relaxed">
+                        This table has no active ordering QR code. Customers cannot check in or
+                        place orders at this table.
+                      </p>
+                      <button
+                        onClick={handleGenerateQr}
+                        disabled={generateMutation.isPending}
+                        className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground text-xs font-bold rounded-xl hover:bg-primary/95 transition-colors cursor-pointer"
+                      >
+                        {generateMutation.isPending ? "Generating..." : "Generate QR Code"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })()
+          )}
 
           <DialogFooter className="mt-6">
             <button
@@ -1076,9 +1096,7 @@ function Tables() {
       <Dialog open={isBulkCreateOpen} onOpenChange={setIsBulkCreateOpen}>
         <DialogContent className="max-w-md w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-2xl p-4 sm:p-6 bg-card border border-border shadow-warm">
           <DialogHeader>
-            <DialogTitle className="font-display text-xl text-left">
-              Bulk Create Tables
-            </DialogTitle>
+            <DialogTitle className="font-display text-xl text-left">Bulk Create Tables</DialogTitle>
             <DialogDescription className="text-left text-xs">
               Generate multiple physical tables at once using a count, prefix, and starting number.
             </DialogDescription>
@@ -1086,7 +1104,9 @@ function Tables() {
 
           <form onSubmit={handleBulkCreate} className="space-y-4 mt-4">
             <div>
-              <label className="block text-xs font-medium mb-1.5 text-foreground">Number of Tables</label>
+              <label className="block text-xs font-medium mb-1.5 text-foreground">
+                Number of Tables
+              </label>
               <input
                 type="number"
                 required
@@ -1099,7 +1119,9 @@ function Tables() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-1.5 text-foreground">Table Name Prefix</label>
+              <label className="block text-xs font-medium mb-1.5 text-foreground">
+                Table Name Prefix
+              </label>
               <input
                 type="text"
                 required
@@ -1110,7 +1132,9 @@ function Tables() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-1.5 text-foreground">Start Number</label>
+              <label className="block text-xs font-medium mb-1.5 text-foreground">
+                Start Number
+              </label>
               <input
                 type="number"
                 required

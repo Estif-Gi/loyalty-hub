@@ -1,9 +1,6 @@
 import api from "@/lib/api";
 import { OrderingConfiguration } from "../types/ordering-settings.types";
-import {
-  RestaurantWorkflowResponse,
-  UpdateWorkflowPayload,
-} from "../types/workflow.types";
+import { RestaurantWorkflowResponse, UpdateWorkflowPayload } from "../types/workflow.types";
 
 export interface UpdateOrderingConfigPayload {
   latitude?: number;

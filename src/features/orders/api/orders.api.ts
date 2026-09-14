@@ -10,10 +10,10 @@ export interface GetOrdersResponse {
 
 export async function getEmployeeOrders(
   restaurantId: string,
-  status: "active" | "history" = "active"
+  status: "active" | "history" = "active",
 ): Promise<Order[]> {
   const response = await api.get<GetOrdersResponse>(
-    `/employee/orders?status=${status}&restaurantId=${restaurantId}`
+    `/employee/orders?status=${status}&restaurantId=${restaurantId}`,
   );
   return response.data.data.orders;
 }
@@ -48,11 +48,11 @@ export interface GetOrderHistoryResponse {
 
 export async function getRestaurantOrderHistory(
   restaurantId: string,
-  params: GetOrderHistoryParams = {}
+  params: GetOrderHistoryParams = {},
 ): Promise<GetOrderHistoryResponse["data"]> {
   const response = await api.get<GetOrderHistoryResponse>(
     `/restaurants/${restaurantId}/orders/history`,
-    { params }
+    { params },
   );
   return response.data.data;
 }

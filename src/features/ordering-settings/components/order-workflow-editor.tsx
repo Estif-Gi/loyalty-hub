@@ -30,10 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  WorkflowStep,
-  WorkflowRole,
-} from "../types/workflow.types";
+import { WorkflowStep, WorkflowRole } from "../types/workflow.types";
 import {
   useRestaurantWorkflow,
   useUpdateRestaurantWorkflow,
@@ -130,8 +127,8 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                 curr.map((s) =>
                   s.key === "placed" && s.actionLabel === "Mark Served"
                     ? { ...s, actionLabel: "Complete Order" }
-                    : s
-                )
+                    : s,
+                ),
               );
             }, 0);
           } else if (updates.enabled && !step.enabled) {
@@ -141,15 +138,15 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                 curr.map((s) =>
                   s.key === "placed" && s.actionLabel === "Complete Order"
                     ? { ...s, actionLabel: "Mark Served" }
-                    : s
-                )
+                    : s,
+                ),
               );
             }, 0);
           }
         }
 
         return updated;
-      })
+      }),
     );
   };
 
@@ -157,16 +154,14 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
   const toggleRoleInArray = (
     stepKey: string,
     field: "visibleToRoles" | "actionRoles",
-    role: WorkflowRole
+    role: WorkflowRole,
   ) => {
     const step = steps.find((s) => s.key === stepKey);
     if (!step) return;
 
     const currentArray = step[field] || [];
     const exists = currentArray.includes(role);
-    const newArray = exists
-      ? currentArray.filter((r) => r !== role)
-      : [...currentArray, role];
+    const newArray = exists ? currentArray.filter((r) => r !== role) : [...currentArray, role];
 
     // For visibleToRoles, at least one role is strongly recommended
     if (field === "visibleToRoles" && newArray.length === 0) {
@@ -238,7 +233,9 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
     return (
       <div className="flex flex-col items-center justify-center py-20 bg-card border border-border rounded-2xl p-6 text-center space-y-3">
         <Loader2 className="w-9 h-9 border-4 border-primary border-t-transparent rounded-full animate-spin text-primary" />
-        <p className="text-xs text-muted-foreground">Loading restaurant workflow configuration...</p>
+        <p className="text-xs text-muted-foreground">
+          Loading restaurant workflow configuration...
+        </p>
       </div>
     );
   }
@@ -274,8 +271,8 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
             )}
           </div>
           <p className="text-xs text-muted-foreground max-w-xl">
-            Configure how orders progress from placement to fulfillment, which staff roles are assigned,
-            and who can trigger milestone status transitions.
+            Configure how orders progress from placement to fulfillment, which staff roles are
+            assigned, and who can trigger milestone status transitions.
           </p>
         </div>
 
@@ -315,9 +312,14 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
         <div className="flex items-center justify-between p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-900 dark:text-amber-200 text-xs animate-in fade-in">
           <div className="flex items-center gap-2">
             <Info className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
-            <span>You have unsaved workflow changes. Click <strong>Save Workflow</strong> to apply them.</span>
+            <span>
+              You have unsaved workflow changes. Click <strong>Save Workflow</strong> to apply them.
+            </span>
           </div>
-          <Badge variant="outline" className="bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-500/40 text-[10px]">
+          <Badge
+            variant="outline"
+            className="bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-500/40 text-[10px]"
+          >
             Unsaved
           </Badge>
         </div>
@@ -345,15 +347,18 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
               const isFirst = idx === 0;
 
               return (
-                <div key={step.key} className="flex flex-col md:flex-row items-center gap-3 sm:gap-4 w-full md:w-auto">
+                <div
+                  key={step.key}
+                  className="flex flex-col md:flex-row items-center gap-3 sm:gap-4 w-full md:w-auto"
+                >
                   {/* Step Card in Diagram */}
                   <div
                     className={`flex items-center gap-3 p-3.5 rounded-2xl border transition-all w-full md:w-56 shadow-xs ${
                       isFirst
                         ? "bg-amber-50/60 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/40"
                         : isLast
-                        ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40"
-                        : "bg-blue-50/60 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800/40"
+                          ? "bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40"
+                          : "bg-blue-50/60 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800/40"
                     }`}
                   >
                     <div
@@ -361,8 +366,8 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                         isFirst
                           ? "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300"
                           : isLast
-                          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300"
-                          : "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300"
+                            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300"
+                            : "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300"
                       }`}
                     >
                       {idx + 1}
@@ -407,7 +412,8 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
           {/* Note if Served is skipped */}
           {!steps.find((s) => s.key === "served")?.enabled && (
             <p className="text-[11px] text-muted-foreground text-center mt-3 pt-3 border-t border-border/30 italic">
-              ⚡ Intermediate "Served" step is currently disabled. Orders move directly from Placed to Completed upon action.
+              ⚡ Intermediate "Served" step is currently disabled. Orders move directly from Placed
+              to Completed upon action.
             </p>
           )}
         </CardContent>
@@ -436,8 +442,8 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                       isPlaced
                         ? "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300"
                         : isServed
-                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300"
-                        : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300"
+                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300"
+                          : "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300"
                     }`}
                   >
                     {index + 1}
@@ -453,8 +459,8 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                           isPlaced
                             ? "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
                             : isServed
-                            ? "bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300"
-                            : "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+                              ? "bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300"
+                              : "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
                         }`}
                       >
                         {step.systemState}
@@ -492,8 +498,8 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                 <div className="p-4 bg-secondary/20 text-xs text-muted-foreground flex items-center gap-2">
                   <Info className="h-4 w-4 text-muted-foreground shrink-0" />
                   <span>
-                    This step is currently disabled. Active orders will skip this milestone and move directly
-                    to the next enabled state.
+                    This step is currently disabled. Active orders will skip this milestone and move
+                    directly to the next enabled state.
                   </span>
                 </div>
               )}
@@ -575,7 +581,9 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                             >
                               <RoleIcon className="h-3 w-3" />
                               <span>{role.label}</span>
-                              {isChecked && <CheckCircle2 className="h-3 w-3 text-primary ml-0.5" />}
+                              {isChecked && (
+                                <CheckCircle2 className="h-3 w-3 text-primary ml-0.5" />
+                              )}
                             </button>
                           );
                         })}
@@ -590,7 +598,8 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                       <div className="space-y-3">
                         <div className="space-y-1.5">
                           <label className="block text-xs font-semibold text-foreground">
-                            Next Transition Action Button Text <span className="text-destructive">*</span>
+                            Next Transition Action Button Text{" "}
+                            <span className="text-destructive">*</span>
                           </label>
                           <Input
                             type="text"
@@ -613,7 +622,9 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                                 <button
                                   key={role.id}
                                   type="button"
-                                  onClick={() => toggleRoleInArray(step.key, "actionRoles", role.id)}
+                                  onClick={() =>
+                                    toggleRoleInArray(step.key, "actionRoles", role.id)
+                                  }
                                   className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
                                     isChecked
                                       ? "bg-primary/10 text-primary border-primary/30 font-semibold"
@@ -622,7 +633,9 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                                 >
                                   <RoleIcon className="h-3 w-3" />
                                   <span>{role.label}</span>
-                                  {isChecked && <CheckCircle2 className="h-3 w-3 text-primary ml-0.5" />}
+                                  {isChecked && (
+                                    <CheckCircle2 className="h-3 w-3 text-primary ml-0.5" />
+                                  )}
                                 </button>
                               );
                             })}
@@ -647,8 +660,9 @@ export function OrderWorkflowEditor({ restaurantId }: OrderWorkflowEditorProps) 
                           <span>Terminal Fulfillment State</span>
                         </div>
                         <p className="text-[11px]">
-                          Completed is the final milestone in the workflow. Orders reaching this state are closed,
-                          marked fulfilled, and archived into restaurant order history.
+                          Completed is the final milestone in the workflow. Orders reaching this
+                          state are closed, marked fulfilled, and archived into restaurant order
+                          history.
                         </p>
                       </div>
                     )}

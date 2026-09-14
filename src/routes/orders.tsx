@@ -120,17 +120,32 @@ function OrdersPage() {
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
         <TabsList className="grid w-full max-w-lg grid-cols-3 h-auto p-1">
-          <TabsTrigger value="active" className="flex items-center justify-center gap-1.5 py-2 px-1 text-xs">
+          <TabsTrigger
+            value="active"
+            className="flex items-center justify-center gap-1.5 py-2 px-1 text-xs"
+          >
             <ClipboardList className="h-3.5 w-3.5 shrink-0" />
-            <span>Active <span className="hidden sm:inline">Orders</span> ({orders.length})</span>
+            <span>
+              Active <span className="hidden sm:inline">Orders</span> ({orders.length})
+            </span>
           </TabsTrigger>
-          <TabsTrigger value="history" className="flex items-center justify-center gap-1.5 py-2 px-1 text-xs">
+          <TabsTrigger
+            value="history"
+            className="flex items-center justify-center gap-1.5 py-2 px-1 text-xs"
+          >
             <History className="h-3.5 w-3.5 shrink-0" />
-            <span><span className="hidden sm:inline">Order </span>History</span>
+            <span>
+              <span className="hidden sm:inline">Order </span>History
+            </span>
           </TabsTrigger>
-          <TabsTrigger value="setup" className="flex items-center justify-center gap-1.5 py-2 px-1 text-xs">
+          <TabsTrigger
+            value="setup"
+            className="flex items-center justify-center gap-1.5 py-2 px-1 text-xs"
+          >
             <Sliders className="h-3.5 w-3.5 shrink-0" />
-            <span><span className="hidden sm:inline">Ordering </span>Setup</span>
+            <span>
+              <span className="hidden sm:inline">Ordering </span>Setup
+            </span>
           </TabsTrigger>
         </TabsList>
 
@@ -164,7 +179,8 @@ function OrdersPage() {
               </div>
               <h3 className="font-semibold text-foreground text-sm">No Active Orders</h3>
               <p className="text-xs text-muted-foreground max-w-sm">
-                There are currently no active orders being prepared or served. New orders placed by guests will appear here.
+                There are currently no active orders being prepared or served. New orders placed by
+                guests will appear here.
               </p>
             </div>
           ) : (
@@ -176,19 +192,24 @@ function OrdersPage() {
 
                 if (step === "placed") {
                   stepLabel = "Placed";
-                  stepClass = "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800/30";
+                  stepClass =
+                    "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800/30";
                 } else if (step === "preparing") {
                   stepLabel = "Cooking";
-                  stepClass = "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800/30";
+                  stepClass =
+                    "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800/30";
                 } else if (step === "ready") {
                   stepLabel = "Ready";
-                  stepClass = "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800/30";
+                  stepClass =
+                    "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800/30";
                 } else if (step === "serving") {
                   stepLabel = "Serving";
-                  stepClass = "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800/30";
+                  stepClass =
+                    "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800/30";
                 } else if (step === "completed") {
                   stepLabel = "Completed";
-                  stepClass = "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800/30 dark:text-gray-300 dark:border-gray-700/30";
+                  stepClass =
+                    "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800/30 dark:text-gray-300 dark:border-gray-700/30";
                 }
 
                 const isPaid = order.payment.status === "paid";
@@ -198,17 +219,26 @@ function OrdersPage() {
                   : "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300";
 
                 return (
-                  <Card key={order.id} className="shadow-soft hover:shadow-md transition-all overflow-hidden flex flex-col justify-between">
+                  <Card
+                    key={order.id}
+                    className="shadow-soft hover:shadow-md transition-all overflow-hidden flex flex-col justify-between"
+                  >
                     <CardHeader className="bg-secondary/10 p-4 border-b border-border/40 space-y-1.5">
                       <div className="flex items-center justify-between">
                         <span className="font-display font-bold text-sm tracking-wide text-primary">
                           {order.orderNumber}
                         </span>
                         <div className="flex items-center gap-1.5">
-                          <Badge variant="outline" className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${paymentClass}`}>
+                          <Badge
+                            variant="outline"
+                            className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${paymentClass}`}
+                          >
                             {paymentLabel}
                           </Badge>
-                          <Badge variant="outline" className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${stepClass}`}>
+                          <Badge
+                            variant="outline"
+                            className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${stepClass}`}
+                          >
                             {stepLabel}
                           </Badge>
                         </div>
@@ -232,7 +262,8 @@ function OrdersPage() {
                           <div className="flex items-center gap-1.5 text-muted-foreground">
                             <User className="h-3.5 w-3.5 text-primary/70" />
                             <span>
-                              Guest: <strong className="text-foreground">{order.customer.name}</strong>
+                              Guest:{" "}
+                              <strong className="text-foreground">{order.customer.name}</strong>
                             </span>
                           </div>
                         )}
@@ -254,14 +285,15 @@ function OrdersPage() {
                         </p>
                         <div className="max-h-[160px] overflow-y-auto space-y-2 pr-1">
                           {order.items.map((item, idx) => (
-                            <div key={idx} className="flex justify-between items-start text-xs border-b border-border/30 last:border-0 pb-1.5 last:pb-0">
+                            <div
+                              key={idx}
+                              className="flex justify-between items-start text-xs border-b border-border/30 last:border-0 pb-1.5 last:pb-0"
+                            >
                               <div className="space-y-0.5 pr-2">
                                 <span className="font-semibold text-primary mr-1.5">
                                   {item.quantity}x
                                 </span>
-                                <span className="text-foreground/90 font-medium">
-                                  {item.name}
-                                </span>
+                                <span className="text-foreground/90 font-medium">{item.name}</span>
                                 {item.notes && (
                                   <p className="text-[11px] text-muted-foreground italic leading-tight pl-5">
                                     "{item.notes}"
@@ -269,7 +301,10 @@ function OrdersPage() {
                                 )}
                               </div>
                               <span className="font-mono text-[11px] text-muted-foreground whitespace-nowrap">
-                                {formatCurrency(item.lineTotal || item.unitPrice * item.quantity, order.pricing.currency)}
+                                {formatCurrency(
+                                  item.lineTotal || item.unitPrice * item.quantity,
+                                  order.pricing.currency,
+                                )}
                               </span>
                             </div>
                           ))}
@@ -288,16 +323,21 @@ function OrdersPage() {
 
                       {/* Summary */}
                       <div className="border-t border-border/40 pt-3 space-y-1.5 font-semibold text-xs">
-                        {order.pricing.subtotal !== undefined && order.pricing.subtotal !== order.pricing.total && (
-                          <div className="flex justify-between text-muted-foreground">
-                            <span>Subtotal</span>
-                            <span>{formatCurrency(order.pricing.subtotal, order.pricing.currency)}</span>
-                          </div>
-                        )}
+                        {order.pricing.subtotal !== undefined &&
+                          order.pricing.subtotal !== order.pricing.total && (
+                            <div className="flex justify-between text-muted-foreground">
+                              <span>Subtotal</span>
+                              <span>
+                                {formatCurrency(order.pricing.subtotal, order.pricing.currency)}
+                              </span>
+                            </div>
+                          )}
                         {!!order.pricing.discount && (
                           <div className="flex justify-between text-success">
                             <span>Discount</span>
-                            <span>-{formatCurrency(order.pricing.discount, order.pricing.currency)}</span>
+                            <span>
+                              -{formatCurrency(order.pricing.discount, order.pricing.currency)}
+                            </span>
                           </div>
                         )}
                         {!!order.pricing.tax && (
@@ -309,7 +349,9 @@ function OrdersPage() {
                         {!!order.pricing.serviceCharge && (
                           <div className="flex justify-between text-muted-foreground">
                             <span>Service Charge</span>
-                            <span>{formatCurrency(order.pricing.serviceCharge, order.pricing.currency)}</span>
+                            <span>
+                              {formatCurrency(order.pricing.serviceCharge, order.pricing.currency)}
+                            </span>
                           </div>
                         )}
                         <div className="flex items-center justify-between text-sm pt-1 border-t border-border/20">
@@ -426,7 +468,7 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
   const totalOrders = pagination?.total || 0;
 
   const hasActiveFilters = Boolean(
-    status !== "history" || search.trim() !== "" || startDate || endDate
+    status !== "history" || search.trim() !== "" || startDate || endDate,
   );
 
   const handleClearFilters = () => {
@@ -510,7 +552,9 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
 
           {/* Start Date */}
           <div className="flex items-center gap-1.5 bg-background border border-input rounded-xl px-2.5 h-10 min-w-0">
-            <span className="text-[11px] font-semibold text-muted-foreground whitespace-nowrap shrink-0">From:</span>
+            <span className="text-[11px] font-semibold text-muted-foreground whitespace-nowrap shrink-0">
+              From:
+            </span>
             <input
               type="date"
               value={startDate}
@@ -535,7 +579,9 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
 
           {/* End Date */}
           <div className="flex items-center gap-1.5 bg-background border border-input rounded-xl px-2.5 h-10 min-w-0">
-            <span className="text-[11px] font-semibold text-muted-foreground whitespace-nowrap shrink-0">To:</span>
+            <span className="text-[11px] font-semibold text-muted-foreground whitespace-nowrap shrink-0">
+              To:
+            </span>
             <input
               type="date"
               value={endDate}
@@ -591,7 +637,12 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
               : "No historical orders recorded yet for this restaurant."}
           </p>
           {hasActiveFilters && (
-            <Button variant="outline" size="sm" onClick={handleClearFilters} className="mt-2 text-xs">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleClearFilters}
+              className="mt-2 text-xs"
+            >
               Clear Filters
             </Button>
           )}
@@ -605,17 +656,21 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
               const isCancelled = order.systemState === "CANCELLED";
               const isCompleted = order.systemState === "COMPLETED";
 
-              let statusBadgeClass = "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800/40 dark:text-gray-300";
+              let statusBadgeClass =
+                "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800/40 dark:text-gray-300";
               let statusLabel: string = order.systemState;
 
               if (isCancelled) {
-                statusBadgeClass = "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300";
+                statusBadgeClass =
+                  "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300";
                 statusLabel = "Cancelled";
               } else if (isCompleted) {
-                statusBadgeClass = "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300";
+                statusBadgeClass =
+                  "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300";
                 statusLabel = "Completed";
               } else {
-                statusBadgeClass = "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300";
+                statusBadgeClass =
+                  "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300";
                 statusLabel = "Active (" + order.currentStepKey + ")";
               }
 
@@ -626,7 +681,10 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
               const totalItemsCount = order.items.reduce((acc, item) => acc + item.quantity, 0);
 
               return (
-                <div key={order.id} className="p-4 space-y-3 hover:bg-secondary/10 transition-colors">
+                <div
+                  key={order.id}
+                  className="p-4 space-y-3 hover:bg-secondary/10 transition-colors"
+                >
                   {/* Card Top: Order #, Date, Status & Payment Badges */}
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -645,10 +703,16 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
                     </div>
 
                     <div className="flex flex-col items-end gap-1 shrink-0">
-                      <Badge variant="outline" className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${statusBadgeClass}`}>
+                      <Badge
+                        variant="outline"
+                        className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${statusBadgeClass}`}
+                      >
                         {statusLabel}
                       </Badge>
-                      <Badge variant="outline" className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${paymentBadgeClass}`}>
+                      <Badge
+                        variant="outline"
+                        className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${paymentBadgeClass}`}
+                      >
                         {isPaid ? "Paid" : "Unpaid"}
                       </Badge>
                     </div>
@@ -660,13 +724,19 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
                       {order.customer?.name && (
                         <div className="flex items-center gap-1">
                           <User className="h-3 w-3 text-primary/70" />
-                          <span>Guest: <strong className="text-foreground">{order.customer.name}</strong></span>
+                          <span>
+                            Guest:{" "}
+                            <strong className="text-foreground">{order.customer.name}</strong>
+                          </span>
                         </div>
                       )}
                       {order.service?.waiter?.name && (
                         <div className="flex items-center gap-1">
                           <Utensils className="h-3 w-3 text-primary/70" />
-                          <span>Waiter: <strong className="text-foreground">{order.service.waiter.name}</strong></span>
+                          <span>
+                            Waiter:{" "}
+                            <strong className="text-foreground">{order.service.waiter.name}</strong>
+                          </span>
                         </div>
                       )}
                     </div>
@@ -730,17 +800,21 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
                   const isCancelled = order.systemState === "CANCELLED";
                   const isCompleted = order.systemState === "COMPLETED";
 
-                  let statusBadgeClass = "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800/40 dark:text-gray-300";
+                  let statusBadgeClass =
+                    "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800/40 dark:text-gray-300";
                   let statusLabel: string = order.systemState;
 
                   if (isCancelled) {
-                    statusBadgeClass = "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300";
+                    statusBadgeClass =
+                      "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300";
                     statusLabel = "Cancelled";
                   } else if (isCompleted) {
-                    statusBadgeClass = "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300";
+                    statusBadgeClass =
+                      "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300";
                     statusLabel = "Completed";
                   } else {
-                    statusBadgeClass = "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300";
+                    statusBadgeClass =
+                      "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300";
                     statusLabel = "Active (" + order.currentStepKey + ")";
                   }
 
@@ -770,7 +844,9 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
                         )}
                       </TableCell>
                       <TableCell className="text-xs text-muted-foreground max-w-[200px]">
-                        <span className="font-medium text-foreground">{totalItemsCount} item{totalItemsCount !== 1 ? "s" : ""}</span>
+                        <span className="font-medium text-foreground">
+                          {totalItemsCount} item{totalItemsCount !== 1 ? "s" : ""}
+                        </span>
                         <p className="text-[11px] truncate text-muted-foreground/80">
                           {order.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}
                         </p>
@@ -779,12 +855,18 @@ function OrderHistoryTab({ restaurantId }: { restaurantId: string | null }) {
                         {formatCurrency(order.pricing?.total || 0, order.pricing?.currency)}
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${paymentBadgeClass}`}>
+                        <Badge
+                          variant="outline"
+                          className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${paymentBadgeClass}`}
+                        >
                           {isPaid ? "Paid" : "Unpaid"}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline" className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${statusBadgeClass}`}>
+                        <Badge
+                          variant="outline"
+                          className={`font-semibold text-[10px] px-2 py-0.5 rounded-full ${statusBadgeClass}`}
+                        >
                           {statusLabel}
                         </Badge>
                       </TableCell>
@@ -965,7 +1047,10 @@ function OrderDetailsDialog({
                     )}
                   </div>
                   <span className="font-mono font-semibold text-foreground whitespace-nowrap">
-                    {formatCurrency(item.lineTotal || item.unitPrice * item.quantity, order.pricing?.currency)}
+                    {formatCurrency(
+                      item.lineTotal || item.unitPrice * item.quantity,
+                      order.pricing?.currency,
+                    )}
                   </span>
                 </div>
               ))}
@@ -1014,14 +1099,20 @@ function OrderDetailsDialog({
               </h4>
               <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
                 {order.timeline.map((entry, idx) => (
-                  <div key={idx} className="flex items-start gap-2 text-[11px] text-muted-foreground">
+                  <div
+                    key={idx}
+                    className="flex items-start gap-2 text-[11px] text-muted-foreground"
+                  >
                     <span className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
                     <div className="flex-1">
                       <span className="font-medium text-foreground">{entry.action}</span>
                       {entry.note && <span className="text-muted-foreground"> - {entry.note}</span>}
                     </div>
                     <span className="text-[10px] text-muted-foreground whitespace-nowrap">
-                      {new Date(entry.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(entry.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </span>
                   </div>
                 ))}
@@ -1263,7 +1354,8 @@ function OrderingSettingsForm() {
                 Ordering Radius Limit
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                The maximum distance (in meters) customers can be from the restaurant center point to place orders.
+                The maximum distance (in meters) customers can be from the restaurant center point
+                to place orders.
               </p>
             </div>
 
@@ -1285,7 +1377,8 @@ function OrderingSettingsForm() {
                 className="w-full h-1.5 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
               />
               <p className="text-[11px] text-muted-foreground text-center italic">
-                Customers must check in within this physical radius. Values strictly enforced by server geofencing checks.
+                Customers must check in within this physical radius. Values strictly enforced by
+                server geofencing checks.
               </p>
             </div>
           </div>

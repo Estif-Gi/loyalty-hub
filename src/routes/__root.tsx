@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "../lib/auth";
 import { useAuthStore } from "../store/auth.store";
 import { Toaster } from "../components/ui/sonner";
+import { OnboardingModal } from "../components/help/onboarding-modal";
 import { useState, useEffect } from "react";
 import { X, Sparkles, Check, Loader2, CreditCard } from "lucide-react";
 import { toast } from "sonner";
@@ -230,6 +231,7 @@ function RootComponent() {
     <>
       <Outlet />
       <SubscriptionLimitModal />
+      <OnboardingModal />
       <Toaster />
     </>
   );

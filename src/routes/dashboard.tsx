@@ -1,13 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Users, QrCode, TrendingUp, Gift } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { Users, QrCode, TrendingUp, Gift, HelpCircle, BookOpen } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/layout";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { StampCard } from "@/components/dashboard/stamp-card";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-
 import { requireOwner } from "@/lib/auth";
+import { useOnboardingStore } from "@/store/onboarding.store";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: requireOwner,
@@ -22,6 +24,21 @@ export const Route = createFileRoute("/dashboard")({
 
 function Overview() {
   const { restaurantId, user } = useAuth();
+  const { openModal, hasCompletedOnboarding } = useOnboardingStore();
+
+  // Auto-launch onboarding sequence on first login
+  useEffect(() => {
+    if (user?.id) {
+      const completed = hasCompletedOnboarding(user.id);
+      if (!completed) {
+        // Small delay to allow page render and smooth modal entrance
+        const timer = setTimeout(() => {
+          openModal(0);
+        }, 600);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [user?.id, hasCompletedOnboarding, openModal]);
 
   const { data: users } = useQuery({
     queryKey: ["customers", restaurantId],
@@ -66,6 +83,26 @@ function Overview() {
     <DashboardLayout
       title={`Good evening, ${user?.name || "Chef"} ✦`}
       subtitle="Here's how your loyalty program is doing today."
+      actions={
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => openModal(0)}
+            className="text-xs font-semibold flex items-center gap-1.5 border-border shadow-2xs"
+          >
+            <HelpCircle className="h-3.5 w-3.5 text-primary" />
+            <span>Setup Guide</span>
+          </Button>
+          <Link
+            to="/help"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-2xs"
+          >
+            <BookOpen className="h-3.5 w-3.5" />
+            <span>Help Center</span>
+          </Link>
+        </div>
+      }
     >
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard
