@@ -145,6 +145,7 @@ export const useAuthStore = create<AuthState>()(
               );
               if (resRestaurant.ok) {
                 const restaurant = await resRestaurant.json();
+                console.log("Restaurant response", restaurant);
                 set({
                   themeColor: restaurant.themeColor ?? null,
                   billingStatus: restaurant.billingStatus ?? null,

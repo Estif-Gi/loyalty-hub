@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect ,useMemo } from "react";
 import { Users, QrCode, TrendingUp, Gift, HelpCircle, BookOpen } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/layout";
 import { StatCard } from "@/components/dashboard/stat-card";
-import { StampCard } from "@/components/dashboard/stamp-card";
+import { TableOccupancyCard } from "@/components/dashboard/table-occupancy-card";
+import { useOrdersRealtime } from "@/features/orders/hooks/useOrdersRealtime";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -25,6 +26,16 @@ export const Route = createFileRoute("/dashboard")({
 function Overview() {
   const { restaurantId, user } = useAuth();
   const { openModal, hasCompletedOnboarding } = useOnboardingStore();
+
+  // Real-time WebSocket connection for live orders & table updates
+  useOrdersRealtime();
+
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  }, []);
 
   // Auto-launch onboarding sequence on first login
   useEffect(() => {
@@ -81,8 +92,8 @@ function Overview() {
 
   return (
     <DashboardLayout
-      title={`Good evening, ${user?.name || "Chef"} ✦`}
-      subtitle="Here's how your loyalty program is doing today."
+      title={`${greeting}, ${user?.name || "Chef"} ✦`}
+      subtitle="Here's how your restaurant operations and loyalty program are doing today."
       actions={
         <div className="flex items-center gap-2">
           <Button
@@ -159,12 +170,8 @@ function Overview() {
         </div>
 
         <div className="space-y-6">
-          <StampCard
-            current={totalCustomers > 0 ? Math.round(totalScans / totalCustomers) : 0}
-            total={10}
-            label="Average customer progress"
-          />
-          <div className="rounded-2xl bg-card border border-border p-5 shadow-soft">
+          <TableOccupancyCard restaurantId={restaurantId} />
+          {/* <div className="rounded-2xl bg-card border border-border p-5 shadow-soft">
             <h3 className="font-display text-lg mb-1">Loyalty completion</h3>
             <p className="text-sm text-muted-foreground mb-4">Customers who reached a reward</p>
             <div className="flex items-end gap-3">
@@ -174,7 +181,7 @@ function Overview() {
             <div className="mt-4 h-2 rounded-full bg-secondary overflow-hidden">
               <div className="h-full bg-gradient-warm" style={{ width: `${loyaltyProgress}%` }} />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </DashboardLayout>

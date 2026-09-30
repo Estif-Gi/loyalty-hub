@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 import axios, { AxiosError } from "axios";
-import { Store, Loader2 } from "lucide-react";
+import { Store, Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
@@ -29,6 +29,7 @@ function getErrorMessage(error: unknown) {
 function Login() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
@@ -43,6 +44,7 @@ function Login() {
         phone,
         password,
       });
+      console.log("Login response", res.data);
       const { token, user } = res.data;
       login(token, user);
 
@@ -97,14 +99,24 @@ function Login() {
             <label className="text-sm font-medium" htmlFor="password">
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={isPasswordVisible ? "text" : "password"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2 pr-10 border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+              <button
+                type="button"
+                onClick={() => setIsPasswordVisible((visible) => !visible)}
+                aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
+              >
+                {isPasswordVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
 
           <button

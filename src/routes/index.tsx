@@ -532,7 +532,7 @@ function LandingPage() {
             <h1 className="a2">
               Your regulars are
               <br />
-              your <span className="accent">goldmine.</span>
+              your <span className="accent text-8xl">goldmine.</span>
               <br />
               Start mining.
             </h1>
