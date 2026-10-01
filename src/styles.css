@@ -163,6 +163,22 @@
 }
 
 @layer utilities {
+  .table-occupancy-track {
+    grid-auto-columns: calc((100% - 1rem) / 3);
+  }
+
+  @media (min-width: 40rem) {
+    .table-occupancy-track {
+      grid-auto-columns: calc((100% - 1.5rem) / 4);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .table-occupancy-track {
+      grid-auto-columns: calc((100% - 2.5rem) / 6);
+    }
+  }
+
   .bg-gradient-warm {
     background-image: var(--gradient-warm);
   }
