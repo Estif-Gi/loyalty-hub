@@ -66,12 +66,12 @@ export function DashboardSidebar() {
           icon: Table,
           description: "Create dining tables, generate QR codes, and assign waiters.",
         },
-        {
-          to: "/qr-codes",
-          label: "QR Codes",
-          icon: QrCode,
-          description: "View table QR codes & waiter app customer scanning workflow.",
-        },
+        // {
+        //   to: "/qr-codes",
+        //   label: "QR Codes",
+        //   icon: QrCode,
+        //   description: "View table QR codes & waiter app customer scanning workflow.",
+        // },
       ],
     },
     {

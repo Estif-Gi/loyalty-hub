@@ -55,12 +55,12 @@ const sections = [
         icon: Table,
         description: "Floor tables and waiter assignments",
       },
-      {
-        to: "/qr-codes",
-        label: "QR Codes",
-        icon: QrCode,
-        description: "Table QRs and waiter app scanning",
-      },
+      // {
+      //   to: "/qr-codes",
+      //   label: "QR Codes",
+      //   icon: QrCode,
+      //   description: "Table QRs and waiter app scanning",
+      // },
     ],
   },
   {
